@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Prototype RabbitCare - Sistem Informasi Rabbit Clinic and Care" />
+  <title>RabbitCare Prototype</title>
+  <style>
+    :root {
+      --primary: #6b8e6e;
+      --primary-700: #4f7053;
+      --primary-100: #edf5ee;
+      --accent: #e6b98f;
+      --accent-100: #fff3e7;
+      --ink: #26302a;
+      --muted: #748078;
+      --line: #e5ebe6;
+      --surface: #ffffff;
+      --surface-alt: #f6f8f6;
+      --danger: #b34f4f;
+      --danger-100: #fff0f0;
+      --warning: #a56b22;
+      --warning-100: #fff6e7;
+      --info: #497aa5;
+      --info-100: #eef7ff;
+      --success: #3f7f57;
+      --success-100: #ebf8ef;
+      --shadow: 0 14px 34px rgba(47, 70, 54, .10);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --sidebar-w: 272px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #f5f7f5;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .hidden { display: none !important; }
+
+    .demo-banner {
+      position: fixed;
+      z-index: 90;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid rgba(107, 142, 110, .18);
+      border-radius: 999px;
+      color: var(--primary-700);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+    }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #4fa86a; box-shadow: 0 0 0 4px rgba(79,168,106,.13); }
+
+    /* AUTH */
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      background:
+        radial-gradient(circle at 8% 14%, rgba(230,185,143,.22), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(107,142,110,.16), transparent 34%),
+        #f6f8f6;
+    }
+
+    .auth-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 56px 7vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(145deg, #5f8263, #86a889);
+      color: #fff;
+    }
+
+    .auth-hero::before,
+    .auth-hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.09);
+    }
+    .auth-hero::before { width: 420px; height: 420px; right: -130px; top: -120px; }
+    .auth-hero::after { width: 270px; height: 270px; left: -80px; bottom: -90px; }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: -.6px;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.30);
+      font-size: 25px;
+    }
+
+    .auth-copy { position: relative; z-index: 1; max-width: 650px; margin-top: 72px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.20);
+    }
+    .auth-copy h1 { font-size: clamp(44px, 6vw, 78px); line-height: .98; margin: 22px 0 20px; letter-spacing: -3px; }
+    .auth-copy p { max-width: 590px; margin: 0; font-size: 18px; line-height: 1.7; color: rgba(255,255,255,.88); }
+
+    .feature-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 34px; }
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(8px);
+    }
+    .feature-icon { font-size: 20px; }
+    .feature-item strong { display: block; margin-bottom: 4px; }
+    .feature-item span { font-size: 13px; color: rgba(255,255,255,.78); line-height: 1.45; }
+
+    .auth-panel { display: grid; place-items: center; padding: 48px 6vw; }
+    .auth-card {
+      width: min(470px, 100%);
+      padding: 34px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.70);
+      box-shadow: 0 28px 60px rgba(50, 70, 58, .12);
+      backdrop-filter: blur(16px);
+    }
+    .auth-card h2 { margin: 0 0 8px; font-size: 30px; letter-spacing: -.8px; }
+    .auth-card > p { margin: 0 0 26px; color: var(--muted); line-height: 1.55; }
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 5px;
+      border-radius: 13px;
+      background: var(--surface-alt);
+      margin-bottom: 22px;
+    }
+    .segmented button {
+      border: 0;
+      padding: 11px;
+      border-radius: 10px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+    }
+    .segmented button.active { color: var(--primary-700); background: #fff; box-shadow: 0 4px 12px rgba(55,76,61,.08); }
+
+    .field { display: grid; gap: 7px; margin-bottom: 15px; }
+    .field label { font-size: 13px; font-weight: 700; color: #485149; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid #dfe6e0;
+      border-radius: 12px;
+      padding: 13px 14px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: .2s ease;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(107,142,110,.11); }
+    .helper-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 4px 0 20px; color: var(--muted); font-size: 13px; }
+    .checkbox { display: inline-flex; align-items: center; gap: 8px; }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 750;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { color: #fff; background: var(--primary); box-shadow: 0 10px 22px rgba(107,142,110,.22); }
+    .btn-primary:hover { background: var(--primary-700); }
+    .btn-secondary { color: var(--primary-700); background: var(--primary-100); }
+    .btn-ghost { color: var(--ink); background: transparent; border: 1px solid var(--line); }
+    .btn-danger { color: var(--danger); background: var(--danger-100); }
+    .btn-block { width: 100%; }
+    .auth-note { margin-top: 17px; font-size: 12px; line-height: 1.55; text-align: center; color: var(--muted); }
+
+    .portal-selector {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .portal-option {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 72px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+      transition: .2s ease;
+    }
+    .portal-option:hover { border-color: #c9d8cb; transform: translateY(-1px); }
+    .portal-option.active { border-color: var(--primary); background: var(--primary-100); box-shadow: 0 0 0 3px rgba(107,142,110,.09); }
+    .portal-option-icon {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--surface-alt);
+      font-size: 19px;
+    }
+    .portal-option.active .portal-option-icon { background: #fff; }
+    .portal-option strong { display: block; font-size: 13px; }
+    .portal-option span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .auth-section-title { margin: 0 0 16px; font-size: 14px; color: var(--primary-700); }
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* APP SHELL */
+    .app-shell { min-height: 100vh; display: grid; grid-template-columns: var(--sidebar-w) 1fr; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar-w);
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      background: #fcfdfc;
+      border-right: 1px solid var(--line);
+      z-index: 40;
+    }
+    .sidebar .brand { color: var(--ink); padding: 4px 8px 20px; font-size: 21px; }
+    .sidebar .brand-mark { background: var(--primary-100); border: 1px solid #dbe8dd; }
+    .prototype-tag { margin-left: auto; font-size: 10px; padding: 4px 7px; border-radius: 999px; color: var(--primary-700); background: var(--primary-100); }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f3f8f4, #fbfdfb);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .avatar { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 50%; background: #dcebdd; color: var(--primary-700); font-weight: 800; }
+    .user-card strong { display: block; font-size: 14px; }
+    .user-card span { font-size: 12px; color: var(--muted); }
+
+    .nav-section-title { padding: 12px 11px 7px; font-size: 11px; font-weight: 800; color: #99a29b; text-transform: uppercase; letter-spacing: .9px; }
+    .nav-list { display: grid; gap: 4px; }
+    .nav-link {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 0;
+      text-align: left;
+      color: #647068;
+      background: transparent;
+      font-weight: 650;
+    }
+    .nav-link:hover { background: #f4f7f4; color: var(--ink); }
+    .nav-link.active { color: var(--primary-700); background: var(--primary-100); }
+    .nav-icon { width: 24px; text-align: center; font-size: 17px; }
+    .nav-badge { margin-left: auto; min-width: 22px; padding: 3px 7px; border-radius: 999px; text-align: center; font-size: 11px; color: #fff; background: var(--primary); }
+    .sidebar-bottom { margin-top: auto; display: grid; gap: 8px; padding-top: 16px; }
+
+    .main { grid-column: 2; min-width: 0; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 76px;
+      padding: 14px 30px;
+      border-bottom: 1px solid rgba(229,235,230,.88);
+      background: rgba(246,248,246,.90);
+      backdrop-filter: blur(18px);
+    }
+    .mobile-menu { display: none; border: 0; background: transparent; font-size: 22px; }
+    .topbar-title { margin-right: auto; }
+    .topbar-title h1 { margin: 0; font-size: 23px; letter-spacing: -.5px; }
+    .topbar-title p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .search {
+      min-width: 250px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .search input { width: 100%; border: 0; outline: 0; background: transparent; }
+    .top-action {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      position: relative;
+    }
+    .notif-dot { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #d66a5e; border: 2px solid #fff; }
+    .role-switch {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .content { padding: 28px 30px 90px; }
+    .page { display: none; animation: fade .24s ease; }
+    .page.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 252px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 20px;
+      padding: 34px;
+      border-radius: 24px;
+      color: #fff;
+      background: linear-gradient(130deg, #58785c, #84a688);
+      box-shadow: var(--shadow);
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 370px;
+      height: 370px;
+      border-radius: 50%;
+      right: -120px;
+      top: -125px;
+      background: rgba(255,255,255,.10);
+    }
+    .hero-card h2 { position: relative; z-index: 1; margin: 10px 0 12px; font-size: clamp(30px, 4vw, 46px); line-height: 1.08; letter-spacing: -1.6px; }
+    .hero-card p { position: relative; z-index: 1; margin: 0; max-width: 640px; color: rgba(255,255,255,.82); line-height: 1.65; }
+    .hero-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .hero-actions .btn-primary { background: #fff; color: var(--primary-700); box-shadow: none; }
+    .hero-actions .btn-ghost { color: #fff; border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.08); }
+
+    .rabbit-visual {
+      position: relative;
+      z-index: 1;
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+    }
+    .rabbit-card {
+      width: min(330px, 100%);
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.24);
+      backdrop-filter: blur(14px);
+      transform: rotate(2deg);
+    }
+    .rabbit-photo {
+      min-height: 118px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      font-size: 82px;
+      background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(255,244,232,.85));
+    }
+    .rabbit-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; }
+    .rabbit-meta strong { display: block; }
+    .rabbit-meta small { color: rgba(255,255,255,.75); }
+
+    .grid { display: grid; gap: 20px; }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .span-2 { grid-column: span 2; }
+    .mt-22 { margin-top: 22px; }
+    .mt-28 { margin-top: 28px; }
+
+    .card {
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: 0 10px 26px rgba(44,62,49,.04);
+    }
+    .card-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .card-header h3 { margin: 0; font-size: 17px; letter-spacing: -.3px; }
+    .card-header p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .link-btn { border: 0; padding: 0; background: transparent; color: var(--primary-700); font-weight: 750; }
+
+    .stat-card { display: flex; align-items: flex-start; gap: 14px; }
+    .stat-icon { width: 44px; height: 44px; flex: 0 0 44px; display: grid; place-items: center; border-radius: 14px; font-size: 20px; }
+    .stat-icon.green { background: var(--primary-100); }
+    .stat-icon.orange { background: var(--accent-100); }
+    .stat-icon.blue { background: var(--info-100); }
+    .stat-icon.red { background: var(--danger-100); }
+    .stat-card p { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
+    .stat-card strong { display: block; font-size: 25px; letter-spacing: -.6px; }
+    .stat-card small { color: var(--success); font-size: 11px; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .status.success { color: var(--success); background: var(--success-100); }
+    .status.warning { color: var(--warning); background: var(--warning-100); }
+    .status.info { color: var(--info); background: var(--info-100); }
+    .status.danger { color: var(--danger); background: var(--danger-100); }
+    .status.neutral { color: #68736c; background: #f0f3f0; }
+
+    .booking-list, .timeline, .reminder-list, .pet-list, .invoice-list { display: grid; gap: 12px; }
+    .booking-item, .reminder-item, .invoice-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .date-box { width: 52px; height: 54px; flex: 0 0 52px; display: grid; place-items: center; align-content: center; border-radius: 13px; background: var(--primary-100); color: var(--primary-700); }
+    .date-box strong { font-size: 18px; line-height: 1; }
+    .date-box span { font-size: 10px; text-transform: uppercase; margin-top: 3px; }
+    .item-main { min-width: 0; flex: 1; }
+    .item-main strong { display: block; margin-bottom: 5px; }
+    .item-main small { color: var(--muted); line-height: 1.45; }
+    .item-actions { margin-left: auto; display: flex; gap: 8px; }
+    .icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+
+    .quick-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .quick-action {
+      display: grid;
+      gap: 10px;
+      min-height: 110px;
+      align-content: center;
+      justify-items: start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #fff;
+      text-align: left;
+      transition: .2s ease;
+    }
+    .quick-action:hover { border-color: #c7d8c9; box-shadow: 0 10px 24px rgba(49,69,55,.07); transform: translateY(-2px); }
+    .quick-action span { font-size: 22px; }
+    .quick-action strong { font-size: 13px; }
+    .quick-action small { color: var(--muted); }
+
+    .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .section-heading h2 { margin: 0; font-size: 28px; letter-spacing: -.8px; }
+    .section-heading p { margin: 7px 0 0; color: var(--muted); }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .filter-select { border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px; background: #fff; }
+
+    .pet-card {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #fff;
+    }
+    .pet-card::after { content: ""; position: absolute; right: -35px; top: -35px; width: 120px; height: 120px; border-radius: 50%; background: var(--primary-100); }
+    .pet-card-head { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; }
+    .pet-avatar { width: 72px; height: 72px; display: grid; place-items: center; border-radius: 19px; background: var(--accent-100); font-size: 44px; }
+    .pet-card h3 { margin: 0 0 5px; }
+    .pet-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .pet-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+    .pet-stat { padding: 10px; border-radius: 12px; background: var(--surface-alt); }
+    .pet-stat small { display: block; color: var(--muted); margin-bottom: 4px; }
+    .pet-stat strong { font-size: 13px; }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .cal-head { text-align: center; padding: 8px; font-size: 11px; color: var(--muted); font-weight: 800; }
+    .cal-day {
+      min-height: 86px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 12px;
+    }
+    .cal-day.muted { color: #b1b9b3; background: #fafbfa; }
+    .cal-day.today { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+    .cal-num { font-weight: 800; }
+    .cal-event { display: block; margin-top: 8px; padding: 5px 6px; border-radius: 7px; background: var(--primary-100); color: var(--primary-700); font-size: 9px; font-weight: 800; }
+    .cal-event.orange { background: var(--accent-100); color: #9b682f; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 15px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; }
+    th { color: var(--muted); background: #fafcfa; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+    tr:last-child td { border-bottom: 0; }
+
+    .timeline-item { position: relative; display: grid; grid-template-columns: 18px 1fr; gap: 13px; }
+    .timeline-item:not(:last-child)::before { content: ""; position: absolute; left: 8px; top: 22px; bottom: -12px; width: 2px; background: var(--line); }
+    .timeline-dot { width: 18px; height: 18px; border-radius: 50%; margin-top: 3px; background: var(--primary); border: 4px solid var(--primary-100); }
+    .timeline-content { padding: 0 0 16px; }
+    .timeline-content strong { display: block; margin-bottom: 4px; }
+    .timeline-content p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .timeline-meta { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .booking-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; }
+    .steps { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 22px; }
+    .step { display: flex; align-items: center; gap: 9px; padding: 10px; border-radius: 12px; color: var(--muted); background: #f6f8f6; }
+    .step-number { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; background: #e9eeea; font-weight: 800; font-size: 12px; }
+    .step.active { color: var(--primary-700); background: var(--primary-100); }
+    .step.active .step-number { color: #fff; background: var(--primary); }
+
+    .service-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .service-card {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      text-align: left;
+    }
+    .service-card.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(107,142,110,.09); }
+    .service-card span { font-size: 25px; }
+    .service-card strong { display: block; margin: 10px 0 4px; }
+    .service-card small { color: var(--muted); }
+
+    .slot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+    .slot { padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: var(--primary-700); font-weight: 700; }
+    .slot:hover, .slot.active { color: #fff; background: var(--primary); border-color: var(--primary); }
+    .slot:disabled { color: #aaa; background: #f2f4f2; cursor: not-allowed; text-decoration: line-through; }
+
+    .summary-box { position: sticky; top: 96px; }
+    .summary-line { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+    .summary-line:last-child { border-bottom: 0; }
+    .summary-line span { color: var(--muted); }
+    .summary-total { display: flex; justify-content: space-between; align-items: end; gap: 14px; margin: 18px 0; }
+    .summary-total strong { font-size: 25px; }
+
+    .empty-state { padding: 40px 20px; text-align: center; color: var(--muted); }
+    .empty-state span { display: block; font-size: 42px; margin-bottom: 12px; }
+
+    .progress { height: 8px; border-radius: 999px; background: #edf0ed; overflow: hidden; }
+    .progress > span { display: block; height: 100%; border-radius: inherit; background: var(--primary); }
+
+    .chart-bars { display: grid; grid-template-columns: repeat(7, 1fr); align-items: end; gap: 12px; height: 210px; padding-top: 16px; }
+    .bar-wrap { display: grid; gap: 8px; align-items: end; justify-items: center; height: 100%; }
+    .bar { width: 100%; min-width: 26px; border-radius: 9px 9px 3px 3px; background: linear-gradient(180deg, #8ead91, #638268); }
+    .bar-wrap small { color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      top: 20px;
+      right: 20px;
+      max-width: 360px;
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transform: translateY(-18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 80;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(25,34,28,.42);
+      backdrop-filter: blur(7px);
+    }
+    .modal { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; padding: 24px; border-radius: 22px; background: #fff; box-shadow: 0 28px 80px rgba(26,40,31,.28); }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .modal-head h3 { margin: 0; }
+    .modal-close { border: 0; background: #f2f5f2; width: 36px; height: 36px; border-radius: 10px; }
+
+    .sidebar-overlay { display: none; }
+
+    @media (max-width: 1180px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quick-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-card { grid-template-columns: 1fr; }
+      .rabbit-visual { display: none; }
+      .booking-layout { grid-template-columns: 1fr; }
+      .summary-box { position: static; }
+    }
+
+    @media (max-width: 980px) {
+      :root { --sidebar-w: 260px; }
+      .auth-screen { grid-template-columns: 1fr; }
+      .auth-hero { min-height: 420px; padding: 38px 7vw 48px; }
+      .auth-copy { margin-top: 46px; }
+      .auth-panel { padding: 34px 20px 70px; }
+      .sidebar { transform: translateX(-102%); transition: transform .25s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay { position: fixed; z-index: 35; inset: 0; background: rgba(26,35,29,.34); }
+      .sidebar-overlay.show { display: block; }
+      .app-shell { grid-template-columns: 1fr; }
+      .main { grid-column: 1; }
+      .mobile-menu { display: block; }
+    }
+
+    @media (max-width: 760px) {
+      .feature-list { grid-template-columns: 1fr; }
+      .auth-copy h1 { letter-spacing: -2px; }
+      .topbar { padding: 12px 16px; }
+      .search { display: none; }
+      .content { padding: 20px 16px 90px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .span-2 { grid-column: auto; }
+      .hero-card { padding: 25px; }
+      .quick-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .calendar-grid { gap: 4px; }
+      .cal-day { min-height: 65px; padding: 6px; }
+      .cal-event { display: none; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .slot-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      .booking-item, .reminder-item, .invoice-item { align-items: flex-start; }
+      .item-actions { flex-direction: column; }
+      .demo-banner { width: calc(100% - 24px); justify-content: center; text-align: center; border-radius: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .auth-card { padding: 25px 20px; }
+      .portal-selector { grid-template-columns: 1fr; }
+      .auth-hero { min-height: 360px; }
+      .auth-copy { margin-top: 34px; }
+      .auth-copy p { font-size: 15px; }
+      .feature-list { display: none; }
+      .topbar-title p { display: none; }
+      .quick-actions { grid-template-columns: 1fr; }
+      .service-grid { grid-template-columns: 1fr; }
+      .slot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+
+    /* DATA, BOOKING, AND PAYMENT REVISION */
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 190px;
+      padding: 30px;
+      border: 1px dashed #cfd9d1;
+      border-radius: var(--radius);
+      text-align: center;
+      color: var(--muted);
+      background: linear-gradient(145deg, #fff, var(--surface-alt));
+    }
+    .empty-state .empty-icon { font-size: 42px; margin-bottom: 10px; }
+    .empty-state strong { color: var(--ink); display: block; margin-bottom: 6px; }
+    .flow-note {
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1px solid #dce8de;
+      background: var(--primary-100);
+      color: var(--primary-700);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .payment-method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 10px 0 16px;
+    }
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 64px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      text-align: left;
+      color: var(--ink);
+    }
+    .payment-option.active { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(107,142,110,.10); background: var(--primary-100); }
+    .payment-option span:first-child { font-size: 22px; }
+    .payment-option small { display: block; margin-top: 3px; color: var(--muted); }
+    .payment-instruction {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 16px;
+      background: var(--surface-alt);
+      margin-bottom: 16px;
+    }
+    .payment-destination {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .payment-destination code { font-size: 16px; font-weight: 800; color: var(--primary-700); }
+    .qr-box {
+      width: 220px;
+      max-width: 100%;
+      margin: 14px auto 4px;
+      padding: 12px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .qr-box img { width: 100%; border-radius: 8px; }
+    .prototype-disclaimer { margin-top: 8px; font-size: 11px; color: var(--muted); text-align: center; }
+    .action-stack { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .btn-sm { padding: 8px 10px; border-radius: 9px; font-size: 12px; }
+    .booking-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-weight: 800; }
+    .payment-summary-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+    .payment-summary-card .summary-line { padding: 8px 0; }
+    .data-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .route-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .route-card:last-child { margin-bottom: 0; }
+    .route-card-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:10px; }
+    .route-card small { color: var(--muted); }
+    .nowrap { white-space: nowrap; }
+    @media (max-width: 680px) {
+      .payment-method-grid { grid-template-columns: 1fr; }
+      .payment-destination { align-items: flex-start; flex-direction: column; }
+      .action-stack { align-items: stretch; }
+      .action-stack .btn { width: 100%; }
+    }
+
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span id="toastIcon">✅</span>
+    <div>
+      <strong id="toastTitle">Berhasil</strong>
+      <div id="toastMessage" style="margin-top:4px;color:var(--muted);font-size:13px"></div>
+    </div>
+  </div>
+
+  <!-- LOGIN / REGISTER -->
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-hero">
+      <div class="brand">
+        <div class="brand-mark">🐇</div>
+        <span>RabbitCare</span>
+      </div>
+      <div class="auth-copy">
+        <span class="eyebrow">Rabbit Clinic & Care Management</span>
+        <h1>Perawatan kelinci, lebih teratur dalam satu aplikasi.</h1>
+        <p>Kelola profil kelinci, booking layanan, riwayat kesehatan, grooming, vaksinasi, pembayaran, dan reminder melalui sistem yang terintegrasi.</p>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-icon">📅</div><div><strong>Booking tanpa benturan</strong><span>Slot layanan diperiksa agar tidak terjadi double booking.</span></div></div>
+          <div class="feature-item"><div class="feature-icon">🩺</div><div><strong>Riwayat terpusat</strong><span>Catatan medis, vaksinasi, dan grooming tersimpan kronologis.</span></div></div>
+          <div class="feature-item"><div class="feature-icon">🔔</div><div><strong>Reminder otomatis</strong><span>Kontrol, vaksin, grooming, dan obat tidak mudah terlewat.</span></div></div>
+          <div class="feature-item"><div class="feature-icon">🔐</div><div><strong>Akses sesuai peran</strong><span>Pemilik, admin, dokter, groomer, dan manajer memiliki menu berbeda.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h2 id="authTitle">Portal Pemilik</h2>
+        <p id="authDesc">Masuk atau daftar untuk mengelola profil dan perawatan kelinci Anda.</p>
+
+        <div class="portal-selector" aria-label="Pilih portal RabbitCare">
+          <button id="ownerPortalTab" class="portal-option active" type="button">
+            <span class="portal-option-icon">🐇</span>
+            <span><strong>Portal Pemilik</strong><span>Untuk customer dan pemilik kelinci</span></span>
+          </button>
+          <button id="staffPortalTab" class="portal-option" type="button">
+            <span class="portal-option-icon">🏥</span>
+            <span><strong>Portal Klinik</strong><span>Untuk admin dan staf klinik</span></span>
+          </button>
+        </div>
+
+        <div id="ownerAuthPanel">
+          <div class="segmented">
+            <button id="ownerLoginTab" class="active" type="button">Masuk</button>
+            <button id="ownerRegisterTab" type="button">Daftar</button>
+          </div>
+
+          <form id="ownerAuthForm">
+            <div id="ownerRegisterFields" class="hidden">
+              <div class="field"><label for="ownerFullName">Nama lengkap</label><input id="ownerFullName" type="text" placeholder="Masukkan nama lengkap Anda" /></div>
+              <div class="field"><label for="ownerPhone">Nomor telepon</label><input id="ownerPhone" type="tel" placeholder="08xxxxxxxxxx" /></div>
+            </div>
+            <div class="field"><label for="ownerEmail">Email customer</label><input id="ownerEmail" type="email" placeholder="nama@email.com" required /></div>
+            <div class="field"><label for="ownerPassword">Kata sandi</label><input id="ownerPassword" type="password" placeholder="Minimal 8 karakter" minlength="8" required /></div>
+            <div class="helper-row">
+              <label class="checkbox"><input type="checkbox" checked /> Ingat saya</label>
+              <a href="#" onclick="event.preventDefault(); showToast('info','Prototype','Fitur reset password customer disimulasikan pada prototype ini.')">Lupa kata sandi?</a>
+            </div>
+            <button id="ownerAuthSubmit" class="btn btn-primary btn-block" type="submit">Masuk ke Portal Pemilik</button>
+          </form>
+          <div class="auth-note">Akun pemilik hanya dapat membuka Portal Pemilik dan tidak memiliki akses ke halaman admin, dokter, groomer, atau manajer.</div>
+        </div>
+
+        <div id="staffAuthPanel" class="hidden">
+          <p class="auth-section-title"><strong>Login Admin & Staf Klinik</strong></p>
+          <form id="staffAuthForm">
+            <div class="field"><label for="staffName">Nama staf</label><input id="staffName" type="text" placeholder="Masukkan nama staf" required /></div>
+            <div class="field"><label for="staffEmail">Email staf</label><input id="staffEmail" type="email" placeholder="staf@rabbitcare.id" required /></div>
+            <div class="field"><label for="staffPassword">Kata sandi</label><input id="staffPassword" type="password" placeholder="Minimal 8 karakter" minlength="8" required /></div>
+            <div class="field">
+              <label for="staffRole">Peran staf</label>
+              <select id="staffRole" required>
+                <option value="admin">Admin Klinik</option>
+                <option value="doctor">Dokter Hewan</option>
+                <option value="groomer">Groomer</option>
+                <option value="manager">Manajer Klinik</option>
+              </select>
+            </div>
+            <div class="helper-row">
+              <label class="checkbox"><input type="checkbox" checked /> Ingat saya</label>
+              <a href="#" onclick="event.preventDefault(); showToast('info','Prototype','Hubungi administrator klinik untuk pemulihan akun staf.')">Lupa kata sandi?</a>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Masuk ke Portal Klinik</button>
+          </form>
+          <div class="auth-note">Pendaftaran mandiri hanya tersedia untuk pemilik. Akun admin dan staf dibuat oleh pihak klinik.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN APPLICATION -->
+  <div id="appShell" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🐇</div>
+        <span>RabbitCare</span>
+        <span class="prototype-tag">PROTOTYPE</span>
+      </div>
+
+      <div class="user-card">
+        <div id="sidebarAvatar" class="avatar">RC</div>
+        <div style="min-width:0">
+          <strong id="sidebarName">Pengguna RabbitCare</strong>
+          <span id="sidebarRole">Pemilik Kelinci</span>
+        </div>
+      </div>
+
+      <div class="nav-section-title">Menu Utama</div>
+      <nav id="mainNav" class="nav-list"></nav>
+
+      <div class="sidebar-bottom">
+        <button class="nav-link" type="button" onclick="openSettings()"><span class="nav-icon">⚙️</span>Pengaturan</button>
+        <button class="nav-link" type="button" onclick="logout()"><span class="nav-icon">↩️</span>Keluar</button>
+      </div>
+    </aside>
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" type="button" aria-label="Buka menu" onclick="toggleSidebar(true)">☰</button>
+        <div class="topbar-title">
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSubtitle">Ringkasan kesehatan dan perawatan kelinci Anda.</p>
+        </div>
+        <div class="search"><span>🔎</span><input type="search" placeholder="Cari data, booking, atau pasien..." /></div>
+        <button class="top-action" type="button" onclick="openNotifications()" aria-label="Notifikasi">🔔<span class="notif-dot"></span></button>
+        <div id="topbarRoleBadge" class="role-badge">Portal Pemilik</div>
+      </header>
+
+      <div class="content">
+        <!-- OWNER DASHBOARD -->
+        <section id="page-dashboard" class="page active">
+          <div class="hero-card">
+            <div>
+              <span id="ownerTodayLabel" class="eyebrow">Tanggal hari ini</span>
+              <h2>Halo, <span id="ownerGreetingName">Pemilik RabbitCare</span>! Kelola kesehatan kelinci Anda dengan lebih teratur.</h2>
+              <p id="ownerHeroText">Tambahkan profil kelinci, buat booking, lalu selesaikan pembayaran agar layanan dapat dikonfirmasi admin.</p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" type="button" onclick="navigate('booking')">+ Buat Booking</button>
+                <button class="btn btn-ghost" type="button" onclick="navigate('pets')">Lihat Profil Kelinci</button>
+              </div>
+            </div>
+            <div class="rabbit-visual">
+              <div class="rabbit-card">
+                <div class="rabbit-photo">🐰</div>
+                <div class="rabbit-meta"><div><strong id="ownerHeroPetName">Belum ada kelinci</strong><small id="ownerHeroPetMeta">Tambahkan profil pertama Anda</small></div><span id="ownerHeroPetStatus" class="status warning">Belum Ada Data</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-4 mt-22">
+            <div class="card stat-card"><div class="stat-icon green">🐇</div><div><p>Profil Kelinci</p><strong id="ownerStatPets">0</strong><small>tersimpan pada akun Anda</small></div></div>
+            <div class="card stat-card"><div class="stat-icon orange">📅</div><div><p>Booking Aktif</p><strong id="ownerStatBookings">0</strong><small>belum selesai</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">🔔</div><div><p>Reminder</p><strong id="ownerStatReminders">0</strong><small id="ownerStatReminderNote">belum ada reminder</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">🧾</div><div><p>Tagihan Menunggu</p><strong id="ownerStatInvoices">0</strong><small id="ownerStatInvoiceAmount">Rp0</small></div></div>
+          </div>
+
+          <div class="grid grid-3 mt-22">
+            <div class="card span-2">
+              <div class="card-header"><div><h3>Jadwal Terdekat</h3><p>Status booking ditampilkan secara konsisten.</p></div><button class="link-btn" onclick="navigate('calendar')">Lihat kalender</button></div>
+              <div id="ownerUpcomingBookings" class="booking-list"></div>
+              <div id="ownerUpcomingEmpty" class="empty-state hidden" style="min-height:150px"><div><strong>Belum ada jadwal booking</strong><p>Booking yang Anda buat akan tampil di sini.</p></div></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div><h3>Aksi Cepat</h3><p>Akses fitur utama.</p></div></div>
+              <div class="quick-actions">
+                <button class="quick-action" onclick="navigate('booking')"><span>📅</span><strong>Booking</strong><small>Pilih layanan</small></button>
+                <button class="quick-action" onclick="navigate('history')"><span>🩺</span><strong>Riwayat</strong><small>Medis & care</small></button>
+                <button class="quick-action" onclick="navigate('invoices')"><span>🧾</span><strong>Tagihan</strong><small>Cek pembayaran</small></button>
+                <button class="quick-action" onclick="navigate('reminders')"><span>🔔</span><strong>Reminder</strong><small>Jadwal berikutnya</small></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-2 mt-22">
+            <div class="card">
+              <div class="card-header"><div><h3>Reminder Perawatan</h3><p>Dibentuk dari hasil layanan sebelumnya.</p></div><button class="link-btn" onclick="navigate('reminders')">Semua reminder</button></div>
+              <div id="ownerDashboardReminders" class="reminder-list"></div>
+              <div id="ownerDashboardReminderEmpty" class="empty-state hidden" style="min-height:130px"><div><strong>Belum ada reminder</strong><p>Reminder akan dibuat dari hasil pemeriksaan atau grooming.</p></div></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div><h3>Ringkasan Kesehatan</h3><p>Data terakhir dari rekam medis.</p></div></div>
+              <div id="ownerHealthSummary" style="display:grid;gap:18px"></div>
+              <div id="ownerHealthEmpty" class="empty-state hidden" style="min-height:130px"><div><strong>Belum ada data kesehatan</strong><p>Tambahkan profil kelinci untuk melihat ringkasan.</p></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PETS -->
+        <section id="page-pets" class="page">
+          <div class="section-heading"><div><h2>Profil Kelinci</h2><p>Data kelinci disimpan di browser dan tetap tersedia ketika file HTML dibuka kembali pada perangkat yang sama.</p></div><button class="btn btn-primary" onclick="openPetModal()">+ Tambah Kelinci</button></div>
+          <div id="petGrid" class="grid grid-3"></div>
+          <div id="petEmpty" class="empty-state hidden"><div><div class="empty-icon">🐇</div><strong>Belum ada profil kelinci</strong><p>Tambahkan profil kelinci terlebih dahulu agar dapat membuat booking layanan.</p><button class="btn btn-primary" onclick="openPetModal()">Tambah Kelinci Pertama</button></div></div>
+        </section>
+
+        <!-- BOOKING -->
+        <section id="page-booking" class="page">
+          <div class="section-heading"><div><h2>Booking Layanan</h2><p>Booking customer otomatis masuk ke Portal Admin dan menghasilkan tagihan pembayaran.</p></div><span class="status info">Terhubung ke Admin</span></div>
+          <div class="booking-layout">
+            <div class="card">
+              <div class="steps">
+                <div class="step active"><span class="step-number">1</span><strong>Pilih Kelinci</strong></div>
+                <div class="step active"><span class="step-number">2</span><strong>Layanan</strong></div>
+                <div class="step active"><span class="step-number">3</span><strong>Jadwal</strong></div>
+                <div class="step"><span class="step-number">4</span><strong>Bayar</strong></div>
+              </div>
+
+              <div class="field"><label for="bookingPet">Profil kelinci</label><select id="bookingPet" onchange="updateBookingSummary()"></select></div>
+              <div id="bookingNoPetWarning" class="flow-note hidden" style="margin-bottom:15px">Belum ada profil kelinci. Tambahkan profil melalui menu <strong>Profil Kelinci</strong> sebelum membuat booking.</div>
+              <div class="field"><label>Pilih layanan</label>
+                <div class="service-grid">
+                  <button type="button" class="service-card active" data-service="Pemeriksaan Umum" data-price="150000" data-department="doctor" onclick="selectService(this)"><span>🩺</span><strong>Pemeriksaan Umum</strong><small>Rp150.000</small></button>
+                  <button type="button" class="service-card" data-service="Vaksinasi" data-price="185000" data-department="doctor" onclick="selectService(this)"><span>💉</span><strong>Vaksinasi</strong><small>Rp185.000</small></button>
+                  <button type="button" class="service-card" data-service="Grooming Lengkap" data-price="120000" data-department="groomer" onclick="selectService(this)"><span>✂️</span><strong>Grooming Lengkap</strong><small>Rp120.000</small></button>
+                  <button type="button" class="service-card" data-service="Kontrol Gigi" data-price="175000" data-department="doctor" onclick="selectService(this)"><span>🦷</span><strong>Kontrol Gigi</strong><small>Rp175.000</small></button>
+                </div>
+              </div>
+              <div class="grid grid-2">
+                <div class="field"><label for="bookingDate">Tanggal yang diinginkan</label><input id="bookingDate" type="date" onchange="updateBookingSummary()" /></div>
+                <div class="field"><label>Penanganan</label><input id="bookingDepartment" value="Dokter Hewan" readonly /></div>
+              </div>
+              <div class="field"><label>Pilih slot tersedia</label>
+                <div class="slot-grid">
+                  <button type="button" class="slot" disabled>08.00</button><button type="button" class="slot" onclick="selectSlot(this)">09.00</button><button type="button" class="slot active" onclick="selectSlot(this)">10.00</button><button type="button" class="slot" onclick="selectSlot(this)">11.00</button>
+                  <button type="button" class="slot" onclick="selectSlot(this)">13.00</button><button type="button" class="slot" onclick="selectSlot(this)">14.00</button><button type="button" class="slot" disabled>15.00</button><button type="button" class="slot" onclick="selectSlot(this)">16.00</button>
+                </div>
+              </div>
+              <div class="field"><label for="bookingNote">Keluhan / catatan awal</label><textarea id="bookingNote" rows="4" placeholder="Tuliskan keluhan atau kebutuhan perawatan..."></textarea></div>
+              <div class="flow-note">Setelah booking dibuat, tagihan akan tersedia. Booking baru dapat dikonfirmasi, dijadwalkan, dan diproses setelah pembayaran dikirim oleh customer serta divalidasi oleh admin.</div>
+            </div>
+
+            <aside class="card summary-box">
+              <div class="card-header"><div><h3>Ringkasan Booking</h3><p>Admin akan menerima data booking ini secara otomatis.</p></div></div>
+              <div class="summary-line"><span>Kelinci</span><strong id="summaryPet">-</strong></div>
+              <div class="summary-line"><span>Layanan</span><strong id="summaryService">Pemeriksaan Umum</strong></div>
+              <div class="summary-line"><span>Tujuan layanan</span><strong id="summaryStaff">Dokter Hewan</strong></div>
+              <div class="summary-line"><span>Jadwal</span><strong id="summarySchedule">-</strong></div>
+              <div class="summary-total"><div><small style="color:var(--muted)">Total pembayaran</small><strong id="summaryPrice" style="display:block">Rp150.000</strong></div><span class="status warning">Wajib Bayar</span></div>
+              <button id="confirmBookingBtn" class="btn btn-primary btn-block" onclick="confirmBooking()">Buat Booking & Tagihan</button>
+              <p style="margin:12px 0 0;color:var(--muted);font-size:11px;line-height:1.5">Sistem memeriksa benturan slot berdasarkan bagian dokter atau grooming.</p>
+            </aside>
+          </div>
+        </section>
+
+        <!-- CALENDAR -->
+        <section id="page-calendar" class="page">
+          <div class="section-heading">
+            <div><h2>Kalender Layanan</h2><p id="calendarScopeText">Jadwal ditampilkan berdasarkan akun dan peran yang sedang login.</p></div>
+            <div class="toolbar">
+              <button class="btn btn-ghost" type="button" onclick="changeCalendarMonth(-1)">‹</button>
+              <button id="calendarMonthLabel" class="btn btn-ghost" type="button" onclick="goToCurrentCalendarMonth()">Bulan</button>
+              <button class="btn btn-ghost" type="button" onclick="changeCalendarMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="card">
+            <div id="calendarGrid" class="calendar-grid"></div>
+          </div>
+          <div id="calendarEmpty" class="flow-note hidden" style="margin-top:14px">Belum ada booking atau reminder pada bulan ini.</div>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="page-history" class="page">
+          <div class="section-heading">
+            <div><h2>Riwayat Kesehatan & Perawatan</h2><p>Riwayat hanya mengambil data kelinci dan layanan yang benar-benar tersimpan.</p></div>
+            <div class="toolbar">
+              <select id="historyPetFilter" class="filter-select" onchange="renderHistory()"></select>
+              <select id="historyTypeFilter" class="filter-select" onchange="renderHistory()">
+                <option value="all">Semua riwayat</option>
+                <option value="medical">Medis</option>
+                <option value="vaccination">Vaksinasi</option>
+                <option value="grooming">Grooming</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-3">
+            <div class="card span-2">
+              <div id="historyTimeline" class="timeline"></div>
+              <div id="historyEmpty" class="empty-state hidden" style="min-height:260px"><div><div class="empty-icon">🩺</div><strong>Belum ada riwayat layanan</strong><p>Riwayat akan muncul setelah dokter atau groomer menyelesaikan tindakan pada kelinci yang dipilih.</p></div></div>
+            </div>
+            <div id="historyProfileCard" class="card">
+              <div class="card-header"><div><h3>Profil Aktif</h3><p>Identitas pasien dari data yang tersimpan.</p></div></div>
+              <div class="pet-card-head"><div class="pet-avatar">🐰</div><div><h3 id="historyPetName" style="margin:0 0 4px">Belum ada kelinci</h3><p id="historyPetId" style="margin:0;color:var(--muted)">-</p></div></div>
+              <div class="summary-line" style="margin-top:14px"><span>Ras</span><strong id="historyPetBreed">-</strong></div>
+              <div class="summary-line"><span>Jenis kelamin</span><strong id="historyPetGender">-</strong></div>
+              <div class="summary-line"><span>Berat terakhir</span><strong id="historyPetWeight">-</strong></div>
+              <div class="summary-line"><span>Status steril</span><strong id="historyPetSteril">-</strong></div>
+              <button class="btn btn-secondary btn-block" style="margin-top:16px" onclick="showToast('info','Unduh riwayat','Ekspor PDF termasuk fitur pengembangan lanjutan pada prototype.')">Unduh Riwayat</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- INVOICES -->
+        <section id="page-invoices" class="page">
+          <div class="section-heading"><div><h2>Tagihan & Pembayaran</h2><p>Transfer bank, QRIS, dan e-wallet akan menunggu validasi admin sebelum booking dapat diproses.</p></div><span id="invoiceRoleHint" class="status info">Pembayaran Customer</span></div>
+          <div class="grid grid-4">
+            <div class="card stat-card"><div class="stat-icon orange">🧾</div><div><p>Total Tagihan</p><strong id="invoiceTotalAmount">Rp0</strong><small id="invoiceTotalCount">0 transaksi</small></div></div>
+            <div class="card stat-card"><div class="stat-icon green">✅</div><div><p>Tervalidasi</p><strong id="invoicePaidAmount">Rp0</strong><small id="invoicePaidCount">0 transaksi</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">⏳</div><div><p>Menunggu</p><strong id="invoicePendingAmount">Rp0</strong><small id="invoicePendingCount">0 transaksi</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">💳</div><div><p>Metode Tersedia</p><strong>5 Kanal</strong><small>Bank, QRIS, DANA, GoPay, OVO</small></div></div>
+          </div>
+          <div class="card mt-22">
+            <div id="invoiceList" class="invoice-list"></div>
+            <div id="invoiceEmpty" class="empty-state hidden"><div><div class="empty-icon">🧾</div><strong>Belum ada tagihan</strong><p>Tagihan akan dibuat otomatis setelah customer menyelesaikan booking.</p></div></div>
+          </div>
+        </section>
+
+        <!-- REMINDERS -->
+        <section id="page-reminders" class="page">
+          <div class="section-heading"><div><h2>Reminder & Notifikasi</h2><p>Reminder berasal dari jadwal kontrol dan grooming yang benar-benar disimpan petugas.</p></div><button class="btn btn-secondary" onclick="showToast('info','Pengaturan notifikasi','Kanal aktif: WhatsApp dan Email.')">Atur Kanal</button></div>
+          <div class="grid grid-3">
+            <div class="card span-2">
+              <div id="reminderList" class="reminder-list"></div>
+              <div id="reminderEmpty" class="empty-state hidden" style="min-height:230px"><div><div class="empty-icon">🔔</div><strong>Belum ada reminder</strong><p>Reminder dibuat setelah dokter menentukan kontrol atau groomer menentukan jadwal berikutnya.</p></div></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div><h3>Status Reminder</h3><p>Ringkasan data reminder tersimpan.</p></div></div>
+              <div class="summary-line"><span>Terjadwal</span><strong id="reminderScheduledCount">0</strong></div>
+              <div class="summary-line"><span>Terkirim / selesai</span><strong id="reminderDeliveredCount">0</strong></div>
+              <div class="summary-line"><span>Gagal</span><strong id="reminderFailedCount">0</strong></div>
+              <div class="summary-line"><span>Total</span><strong id="reminderTotalCount">0</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="page-admin-dashboard" class="page">
+          <div class="section-heading"><div><h2>Dashboard Admin</h2><p>Booking customer, validasi pembayaran, check-in, pengarahan petugas, dan tindakan berada dalam satu alur.</p></div><button class="btn btn-primary" onclick="navigate('admin-bookings')">Kelola Booking</button></div>
+          <div class="grid grid-4">
+            <div class="card stat-card"><div class="stat-icon green">📅</div><div><p>Total Booking</p><strong id="adminStatBookings">0</strong><small>tersimpan dari customer</small></div></div>
+            <div class="card stat-card"><div class="stat-icon orange">💳</div><div><p>Menunggu Validasi</p><strong id="adminStatValidation">0</strong><small>pembayaran customer</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">🔢</div><div><p>Antrean Aktif</p><strong id="adminStatQueue">0</strong><small>check-in dan diarahkan</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">🩺</div><div><p>Sedang Dilayani</p><strong id="adminStatService">0</strong><small>dokter atau groomer</small></div></div>
+          </div>
+          <div class="grid grid-3 mt-22">
+            <div class="card span-2">
+              <div class="card-header"><div><h3>Booking Terbaru dari Customer</h3><p>Data muncul otomatis dari Portal Pemilik.</p></div><button class="link-btn" onclick="navigate('admin-bookings')">Lihat semua</button></div>
+              <div class="table-wrap"><table><thead><tr><th>Kode</th><th>Customer / Kelinci</th><th>Layanan</th><th>Pembayaran</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="adminDashboardBookingBody"></tbody></table></div>
+              <div id="adminDashboardEmpty" class="empty-state hidden"><div><div class="empty-icon">📅</div><strong>Belum ada booking customer</strong><p>Booking baru akan muncul di sini secara otomatis.</p></div></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div><h3>Antrean Aktif</h3><p>Pasien yang sudah dibayar dan check-in.</p></div></div>
+              <div id="adminQueueList" class="booking-list"></div>
+              <div id="adminQueueEmpty" class="empty-state hidden" style="min-height:150px"><div><strong>Belum ada antrean aktif</strong><p>Validasi pembayaran lalu lakukan check-in.</p></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADMIN BOOKINGS -->
+        <section id="page-admin-bookings" class="page">
+          <div class="section-heading"><div><h2>Pengelolaan Booking</h2><p>Urutan proses: booking masuk → pembayaran customer → validasi admin → check-in → arahkan petugas → tindakan.</p></div><span class="status success">Data Real-time Browser</span></div>
+          <div class="card" style="margin-bottom:18px"><div class="flow-note"><strong>Aturan proses:</strong> admin hanya dapat melakukan check-in setelah pembayaran tervalidasi. Setelah check-in, admin dapat mengarahkan pasien ke dokter atau groomer, lalu memulai dan menyelesaikan tindakan.</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Kode Booking</th><th>Customer / Pasien</th><th>Layanan & Jadwal</th><th>Pembayaran</th><th>Status Layanan</th><th>Aksi Admin</th></tr></thead><tbody id="adminBookingBody"></tbody></table></div>
+          <div id="adminBookingEmpty" class="empty-state hidden"><div><div class="empty-icon">📅</div><strong>Belum ada booking</strong><p>Silakan buat booking melalui Portal Pemilik, lalu login kembali sebagai admin.</p></div></div>
+        </section>
+
+        <!-- ADMIN PATIENTS -->
+        <section id="page-admin-patients" class="page">
+          <div class="section-heading"><div><h2>Data Pemilik & Pasien</h2><p>Semua profil kelinci yang ditambahkan customer tersimpan dan dapat dilihat oleh admin.</p></div><span class="status info">Data Terpusat</span></div>
+          <div class="card" style="margin-bottom:18px"><div class="search" style="display:flex;min-width:0;width:100%"><span>🔎</span><input id="adminPatientSearch" placeholder="Cari nama pemilik, nomor telepon, nama kelinci, atau ID pasien..." oninput="renderAdminPatients()" /></div></div>
+          <div class="table-wrap"><table><thead><tr><th>ID Pasien</th><th>Nama Kelinci</th><th>Pemilik</th><th>Ras</th><th>Berat</th><th>Status</th></tr></thead><tbody id="adminPatientBody"></tbody></table></div>
+          <div id="adminPatientEmpty" class="empty-state hidden"><div><div class="empty-icon">🐇</div><strong>Belum ada data pasien</strong><p>Profil kelinci yang dibuat customer akan muncul di sini.</p></div></div>
+        </section>
+
+        <!-- DOCTOR DASHBOARD -->
+        <section id="page-doctor-dashboard" class="page">
+          <div class="section-heading">
+            <div><h2>Dashboard Dokter</h2><p>Pasien yang telah divalidasi, check-in, dan diarahkan admin ke bagian dokter.</p></div>
+            <span id="doctorScopeLabel" class="status success">Terintegrasi dengan Admin</span>
+          </div>
+          <div class="grid grid-4">
+            <div class="card stat-card"><div class="stat-icon green">🔢</div><div><p>Total Penugasan</p><strong id="doctorStatAssigned">0</strong><small>dari admin</small></div></div>
+            <div class="card stat-card"><div class="stat-icon orange">🩺</div><div><p>Menunggu Pemeriksaan</p><strong id="doctorStatWaiting">0</strong><small>siap diperiksa</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">▶️</div><div><p>Sedang Dilayani</p><strong id="doctorStatInService">0</strong><small>pemeriksaan aktif</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">✅</div><div><p>Selesai</p><strong id="doctorStatCompleted">0</strong><small>rekam medis tersimpan</small></div></div>
+          </div>
+          <div class="card mt-22">
+            <div class="card-header"><div><h3>Antrean Dokter dari Admin</h3><p>Dokter membuka pemeriksaan berdasarkan pasien yang telah diarahkan admin.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Antrean</th><th>Pasien</th><th>Layanan & Keluhan</th><th>Jadwal</th><th>Petugas</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="doctorQueueBody"></tbody></table></div>
+            <div id="doctorQueueEmpty" class="empty-state hidden" style="min-height:160px"><div><div class="empty-icon">🩺</div><strong>Belum ada pasien dari admin</strong><p>Pasien muncul setelah pembayaran tervalidasi, check-in, dan diarahkan ke dokter.</p></div></div>
+          </div>
+          <div class="card mt-22">
+            <div class="card-header"><div><h3>Riwayat Pemeriksaan Selesai</h3><p>Hasil pemeriksaan yang disimpan dokter langsung memperbarui status pada portal admin dan laporan manajer.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Kode</th><th>Pasien</th><th>Diagnosis</th><th>Tindakan</th><th>Kontrol</th><th>Selesai Oleh</th></tr></thead><tbody id="doctorCompletedBody"></tbody></table></div>
+            <div id="doctorCompletedEmpty" class="empty-state hidden" style="min-height:130px"><div><strong>Belum ada pemeriksaan selesai</strong><p>Riwayat akan terbentuk setelah form pemeriksaan disimpan.</p></div></div>
+          </div>
+        </section>
+
+        <!-- DOCTOR EXAM -->
+        <section id="page-doctor-exam" class="page">
+          <div class="section-heading">
+            <div><h2>Pemeriksaan Pasien</h2><p>Rekam medis hanya dapat diisi oleh dokter dan akan otomatis terbaca oleh admin serta manajer.</p></div>
+            <div class="toolbar"><span id="doctorExamQueue" class="status info">Belum memilih pasien</span><button class="btn btn-ghost" onclick="navigate('doctor-dashboard')">Kembali</button></div>
+          </div>
+          <div class="grid grid-3">
+            <div class="card">
+              <div class="pet-card-head"><div class="pet-avatar">🐰</div><div><h3 id="doctorExamPetName" style="margin:0 0 4px">Pilih pasien dari antrean</h3><p id="doctorExamPetMeta" style="margin:0;color:var(--muted)">Data pasien akan tampil di sini.</p></div></div>
+              <div class="summary-line" style="margin-top:16px"><span>Customer</span><strong id="doctorExamOwner">-</strong></div>
+              <div class="summary-line"><span>Layanan</span><strong id="doctorExamService">-</strong></div>
+              <div class="summary-line"><span>Jadwal</span><strong id="doctorExamSchedule">-</strong></div>
+              <div class="summary-line"><span>Keluhan awal</span><strong id="doctorExamComplaint" style="text-align:right">-</strong></div>
+              <button class="btn btn-secondary btn-block" style="margin-top:16px" onclick="showActivePatientHistory()">Buka Riwayat Pasien</button>
+            </div>
+            <div class="card span-2">
+              <form id="doctorExamForm" onsubmit="saveDoctorExam(event)">
+                <div class="grid grid-2">
+                  <div class="field"><label>Anamnesis</label><textarea id="doctorAnamnesis" rows="5" required placeholder="Riwayat keluhan, pola makan, aktivitas, dan feses..."></textarea></div>
+                  <div class="field"><label>Pemeriksaan fisik</label><textarea id="doctorPhysicalExam" rows="5" required placeholder="Kondisi gigi, pencernaan, kulit, bulu, suhu, dan berat..."></textarea></div>
+                </div>
+                <div class="field"><label>Diagnosis</label><input id="doctorDiagnosis" type="text" required placeholder="Diagnosis wajib diisi sebelum pemeriksaan selesai" /></div>
+                <div class="field"><label>Tindakan</label><textarea id="doctorAction" rows="3" required placeholder="Tindakan medis yang diberikan..."></textarea></div>
+                <div class="grid grid-2">
+                  <div class="field"><label>Resep</label><input id="doctorPrescription" type="text" placeholder="Obat, dosis, frekuensi, dan durasi" /></div>
+                  <div class="field"><label>Jadwal kontrol</label><input id="doctorFollowUp" type="date" /></div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-ghost" onclick="saveDoctorDraft()">Simpan Draft</button><button class="btn btn-primary">Selesaikan Pemeriksaan</button></div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- GROOMER DASHBOARD -->
+        <section id="page-groomer-dashboard" class="page">
+          <div class="section-heading">
+            <div><h2>Dashboard Groomer</h2><p>Pasien grooming yang telah dibayar, check-in, dan diarahkan admin.</p></div>
+            <span id="groomerScopeLabel" class="status success">Terintegrasi dengan Admin</span>
+          </div>
+          <div class="grid grid-4">
+            <div class="card stat-card"><div class="stat-icon green">✂️</div><div><p>Total Penugasan</p><strong id="groomerStatAssigned">0</strong><small>dari admin</small></div></div>
+            <div class="card stat-card"><div class="stat-icon orange">🧼</div><div><p>Menunggu Pre-check</p><strong id="groomerStatWaiting">0</strong><small>siap dilayani</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">▶️</div><div><p>Sedang Grooming</p><strong id="groomerStatInService">0</strong><small>layanan aktif</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">⚠️</div><div><p>Perlu Rujukan</p><strong id="groomerStatReferral">0</strong><small>menunggu admin</small></div></div>
+          </div>
+          <div class="card mt-22">
+            <div class="card-header"><div><h3>Antrean Grooming dari Admin</h3><p>Pre-check wajib dilakukan sebelum layanan dimulai.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Antrean</th><th>Pasien</th><th>Layanan</th><th>Jadwal</th><th>Petugas</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="groomerQueueBody"></tbody></table></div>
+            <div id="groomerQueueEmpty" class="empty-state hidden" style="min-height:160px"><div><div class="empty-icon">✂️</div><strong>Belum ada pasien grooming</strong><p>Pasien muncul setelah admin menyelesaikan validasi pembayaran, check-in, dan pengarahan.</p></div></div>
+          </div>
+          <div class="card mt-22">
+            <div class="card-header"><div><h3>Riwayat Grooming Selesai</h3><p>Hasil grooming langsung memperbarui portal admin dan laporan manajer.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Kode</th><th>Pasien</th><th>Hasil</th><th>Temuan</th><th>Jadwal Berikutnya</th><th>Selesai Oleh</th></tr></thead><tbody id="groomerCompletedBody"></tbody></table></div>
+            <div id="groomerCompletedEmpty" class="empty-state hidden" style="min-height:130px"><div><strong>Belum ada grooming selesai</strong><p>Riwayat akan terbentuk setelah hasil grooming disimpan.</p></div></div>
+          </div>
+        </section>
+
+        <!-- GROOMING FORM -->
+        <section id="page-grooming-form" class="page">
+          <div class="section-heading">
+            <div><h2>Pencatatan Grooming</h2><p>Jika kondisi tidak aman, hentikan layanan dan kirim rujukan kembali ke admin.</p></div>
+            <div class="toolbar"><span id="groomingFormQueue" class="status info">Belum memilih pasien</span><button class="btn btn-ghost" onclick="navigate('groomer-dashboard')">Kembali</button></div>
+          </div>
+          <div class="grid grid-3">
+            <div class="card">
+              <div class="pet-card-head"><div class="pet-avatar" style="background:var(--primary-100)">🐇</div><div><h3 id="groomingPetName" style="margin:0 0 4px">Pilih pasien dari antrean</h3><p id="groomingPetMeta" style="margin:0;color:var(--muted)">Data pasien akan tampil di sini.</p></div></div>
+              <div class="summary-line" style="margin-top:16px"><span>Customer</span><strong id="groomingOwner">-</strong></div>
+              <div class="summary-line"><span>Booking</span><strong id="groomingBookingCode">-</strong></div>
+              <div class="summary-line"><span>Layanan</span><strong id="groomingService">-</strong></div>
+              <div class="summary-line"><span>Jadwal</span><strong id="groomingSchedule">-</strong></div>
+            </div>
+            <div class="card span-2">
+              <form id="groomingServiceForm" onsubmit="saveGroomingResult(event)">
+                <div class="field"><label>Kondisi awal</label><textarea id="groomingInitialCondition" rows="4" required placeholder="Kondisi bulu, kulit, telinga, kuku, dan aktivitas..."></textarea></div>
+                <div class="field"><label>Keputusan keamanan layanan</label><div style="display:flex;gap:10px;flex-wrap:wrap"><label class="checkbox"><input type="radio" name="groomingSafe" value="AMAN" checked /> Aman dilanjutkan</label><label class="checkbox"><input type="radio" name="groomingSafe" value="TIDAK_AMAN" /> Tidak aman</label></div></div>
+                <div class="field"><label>Hasil grooming</label><textarea id="groomingResult" rows="4" required placeholder="Layanan yang dilakukan dan hasil akhir..."></textarea></div>
+                <div class="field"><label>Temuan kesehatan</label><textarea id="groomingFinding" rows="3" placeholder="Kosongkan jika tidak ada temuan"></textarea></div>
+                <div class="grid grid-2"><div class="field"><label>Rujukan dokter</label><select id="groomingReferral"><option value="TIDAK">Tidak perlu</option><option value="YA">Perlu pemeriksaan dokter</option></select></div><div class="field"><label>Grooming berikutnya</label><input id="groomingNextDate" type="date" /></div></div>
+                <div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-danger" onclick="stopGroomingIntegrated()">Hentikan & Ajukan Rujukan</button><button class="btn btn-primary">Simpan Hasil Grooming</button></div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- MANAGER DASHBOARD -->
+        <section id="page-manager-dashboard" class="page">
+          <div class="section-heading">
+            <div><h2>Dashboard Manajer</h2><p>Data operasional berasal langsung dari booking customer dan perubahan status oleh admin, dokter, serta groomer.</p></div>
+            <div class="toolbar"><span class="status success">Data Terintegrasi</span><button class="btn btn-secondary" onclick="showToast('info','Ekspor laporan','Ekspor PDF/Excel merupakan fitur lanjutan prototype.')">Ekspor</button></div>
+          </div>
+          <div class="grid grid-4">
+            <div class="card stat-card"><div class="stat-icon green">🐇</div><div><p>Total Pasien</p><strong id="managerStatPatients">0</strong><small>profil kelinci tersimpan</small></div></div>
+            <div class="card stat-card"><div class="stat-icon orange">📅</div><div><p>Total Booking</p><strong id="managerStatBookings">0</strong><small>seluruh status</small></div></div>
+            <div class="card stat-card"><div class="stat-icon blue">✅</div><div><p>Completion Rate</p><strong id="managerStatCompletion">0%</strong><small id="managerStatCompletionNote">0 layanan selesai</small></div></div>
+            <div class="card stat-card"><div class="stat-icon red">💰</div><div><p>Pendapatan Tervalidasi</p><strong id="managerStatRevenue">Rp0</strong><small>pembayaran valid</small></div></div>
+          </div>
+          <div class="grid grid-3 mt-22">
+            <div class="card span-2">
+              <div class="card-header"><div><h3>Alur Operasional Saat Ini</h3><p>Status booking mengikuti tindakan pada portal admin dan staf.</p></div></div>
+              <div class="grid grid-4">
+                <div class="metric-card"><span>Menunggu Validasi</span><strong id="managerFlowValidation">0</strong></div>
+                <div class="metric-card"><span>Antrean / Diarahkan</span><strong id="managerFlowQueue">0</strong></div>
+                <div class="metric-card"><span>Sedang Dilayani</span><strong id="managerFlowService">0</strong></div>
+                <div class="metric-card"><span>Perlu Rujukan</span><strong id="managerFlowReferral">0</strong></div>
+              </div>
+            </div>
+            <div class="card"><div class="card-header"><div><h3>Layanan Populer</h3><p>Berdasarkan booking yang tersimpan.</p></div></div><div id="managerPopularServices" style="display:grid;gap:16px"></div></div>
+          </div>
+          <div class="grid grid-2 mt-22">
+            <div class="card"><div class="card-header"><div><h3>Ringkasan Pembayaran</h3><p>Status validasi admin.</p></div></div><div class="summary-line"><span>Belum dibayar</span><strong id="managerPayUnpaid">0</strong></div><div class="summary-line"><span>Menunggu validasi</span><strong id="managerPaySubmitted">0</strong></div><div class="summary-line"><span>Tervalidasi</span><strong id="managerPayPaid">0</strong></div><div class="summary-line"><span>Ditolak</span><strong id="managerPayRejected">0</strong></div></div>
+            <div class="card"><div class="card-header"><div><h3>Distribusi Penanganan</h3><p>Pasien yang diarahkan admin.</p></div></div><div class="summary-line"><span>Bagian dokter</span><strong id="managerDoctorAssignments">0</strong></div><div class="summary-line"><span>Bagian groomer</span><strong id="managerGroomerAssignments">0</strong></div><div class="summary-line"><span>Pemeriksaan selesai</span><strong id="managerDoctorCompleted">0</strong></div><div class="summary-line"><span>Grooming selesai</span><strong id="managerGroomerCompleted">0</strong></div></div>
+          </div>
+          <div class="card mt-22">
+            <div class="card-header"><div><h3>Aktivitas Booking Terbaru</h3><p>Ringkasan data yang juga terlihat pada portal admin.</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Kode</th><th>Customer / Pasien</th><th>Layanan</th><th>Pembayaran</th><th>Petugas</th><th>Status</th></tr></thead><tbody id="managerRecentBody"></tbody></table></div>
+            <div id="managerRecentEmpty" class="empty-state hidden" style="min-height:140px"><div><strong>Belum ada aktivitas</strong><p>Data akan muncul setelah customer membuat booking.</p></div></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- REUSABLE MODAL -->
+  <div id="modalBackdrop" class="modal-backdrop hidden" onclick="if(event.target===this) closeModal()">
+    <div class="modal">
+      <div class="modal-head"><h3 id="modalTitle">Tambah Profil Kelinci</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="demoBanner" class="demo-banner hidden"><span class="dot"></span>Mode prototype • Akses menu dibatasi sesuai akun dan peran yang digunakan saat login.</div>
+
+  <script>
+    const STORAGE_KEY = 'rabbitcarePrototypeDataV3';
+    const OWNER_KEY = 'rabbitcareOwners';
+    const QRIS_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQAAAADjFjCXAAAEFklEQVR4nO2dS4rjSBCGvxgJvMyCPkAdRbpZnWluIB3FB2iQloYUMYt8ye4ZBiw3Zbf/WDStdH5IgiAi46Eocw7I/NcRGoQLFy5cuHDhwoU/FrcsfVq0cTXL/2MzYDNY+/RDkvFxdxf+bjju7s7g7u5L5+4eAbpyuQCDRyC0LYWYXvrdhX83vmbzZfbROcOymY3hYjaGiE9rD8O52L9qE5/l4YW/GN7fLgx/99Hnjy7C+sOZrXMIsXf4lyTLS7+78KfCbQQgROzLI8zWYyNbOc393rsL/+PxYuuCA2tb3wzCgsPWQ/jZ+2zgrNcm76XfXfg347OZmX2U1WHpnOHcY+N6cobzye1r6dxGthTCPvTuwt8MTzFskxKqAimQvQpubzYrhhV+AC95uB6fABtDhMEvBqsZhJxNafseeXfh74ZX8xWBEPGJzqlmLu0Zls7zD6Fm82TrhN8tRbk69yldxmTwymXLIQNDuowoSyz8gNwe6Sb2mpjUrBnBYVevkNYJv1eyq4TiSEO2dVmv6pZm61LAIa0TfrdkH7qAT6XS2sqyEKpLXarXrVukdcLvkhZNpATJROc+heJXd2v1h6HmUKR1wu+S5j5TIDssZLtWu0/a4a51n8jWCT8g2WiF7GaTSkH2ptykiqeUOUG2Tvhh3FLzZlK9zVJFLEWuIeZ62QjY17lPazY+7u7C3w1PVQZnPbnNlvubSpW1cyOAQRcNNmP+jL3BqWx56XcX/l34r7k5mnMtW7L/LQUKRRPCj+H7GHYCSs2rqmOoscZSs8SuaEL4IWn5upyl81yHuFKzyO6s57J1wo/JrvCQpBi3pmb7osV1IllaJ/wuaY60VbpyWo5m5kiXxSbK1gk/JM3D7oqxOx9a03etSqFznfAH4V01eBezce1Llm7taf43f61IDXOf5OGFvxZeTVqklMWalLUJcr44u17VJoQfkl25q6lZCmRDrKe+fZNx4uRhhd8vJUvM/khXe05KM0BX2532hztpnfC75Orb/xCxYerchnMfHXDyFIDNnPWH509mw0/zh9xd+HviNYYtnelAcZ+h5VCgJIjVXyf8YVpXPsDJ/yxXjXcTtd2u5PV0rhN+QK7SwqXcCuwLZDV9136Q1gk/IH4trQRWtK4ZvNZVXNaldcLvx9usTvdzD3U4Zx5sF9zTPIC0Rh379AwPL/xV8aGYNLPP0kFMuFhO1a1mPtXZE3V+4pM8vPBXxcuszjS/aUxrJ2e2U/1Qx525jHNSRUz4ASmZE/atTVwX+XcRxgIth6JznfDH4T6FSx3xtOXhxL50zvwZ69Hvd91d+B+P/zKDfSqV1t289dvx6wuqwwo/Irs83L7dKfeX7OY81WFj8rDCD+Lm/7/nv0V/vU64cOHChQsXLvxZ8H8AME+GgpNELLQAAAAASUVORK5CYII=';
+    const PAYMENT_DESTINATIONS = {
+      bank: { method: 'TRANSFER_BANK', channel: 'Bank BCA', destination: '1234567890', owner: 'RabbitCare Clinic', icon: '🏦' },
+      qris: { method: 'QRIS', channel: 'QRIS RabbitCare', destination: 'NMID ID1020304050607', owner: 'RabbitCare Clinic', icon: '▦' },
+      dana: { method: 'E_WALLET', channel: 'DANA', destination: '081234567890', owner: 'RabbitCare Clinic', icon: '📱' },
+      gopay: { method: 'E_WALLET', channel: 'GoPay', destination: '081234567891', owner: 'RabbitCare Clinic', icon: '📱' },
+      ovo: { method: 'E_WALLET', channel: 'OVO', destination: '081234567892', owner: 'RabbitCare Clinic', icon: '📱' }
+    };
+
+    const roleData = {
+      owner: { label: 'Pemilik Kelinci', portalLabel: 'Portal Pemilik', defaultPage: 'dashboard', nav: [
+        ['dashboard','🏠','Dashboard'],['pets','🐇','Profil Kelinci'],['booking','📅','Booking Layanan'],['calendar','🗓️','Kalender'],['history','🩺','Riwayat Kesehatan'],['invoices','🧾','Tagihan'],['reminders','🔔','Reminder']
+      ]},
+      admin: { label: 'Admin Klinik', portalLabel: 'Portal Klinik', defaultPage: 'admin-dashboard', nav: [
+        ['admin-dashboard','🏠','Dashboard'],['admin-bookings','📅','Booking'],['admin-patients','🐇','Data Pasien'],['calendar','🗓️','Jadwal Petugas'],['invoices','🧾','Validasi Pembayaran'],['reminders','🔔','Reminder']
+      ]},
+      doctor: { label: 'Dokter Hewan', portalLabel: 'Portal Klinik', defaultPage: 'doctor-dashboard', nav: [
+        ['doctor-dashboard','🏠','Dashboard'],['history','📚','Riwayat Medis'],['calendar','🗓️','Jadwal Praktik']
+      ]},
+      groomer: { label: 'Rabbit Groomer', portalLabel: 'Portal Klinik', defaultPage: 'groomer-dashboard', nav: [
+        ['groomer-dashboard','🏠','Dashboard'],['history','📚','Riwayat Grooming'],['calendar','🗓️','Jadwal']
+      ]},
+      manager: { label: 'Manajer Klinik', portalLabel: 'Portal Klinik', defaultPage: 'manager-dashboard', nav: [
+        ['manager-dashboard','📊','Dashboard'],['admin-patients','🐇','Laporan Pasien'],['admin-bookings','📅','Laporan Booking'],['invoices','💰','Laporan Pendapatan'],['reminders','🔔','Laporan Reminder']
+      ]}
+    };
+
+    const pageMeta = {
+      dashboard: ['Dashboard','Ringkasan kesehatan dan perawatan kelinci Anda.'], pets: ['Profil Kelinci','Tambah dan simpan data pasien kelinci.'],
+      booking: ['Booking Layanan','Booking customer otomatis masuk ke portal admin.'], calendar: ['Kalender','Pantau jadwal layanan dan slot tersedia.'],
+      history: ['Riwayat Kesehatan','Lihat catatan medis, vaksinasi, dan grooming.'], invoices: ['Tagihan & Pembayaran','Kirim pembayaran dan tunggu validasi admin.'],
+      reminders: ['Reminder','Jangan lewatkan jadwal kontrol dan perawatan.'], 'admin-dashboard': ['Dashboard Admin','Kelola alur booking hingga tindakan.'],
+      'admin-bookings': ['Pengelolaan Booking','Validasi pembayaran, check-in, dan arahkan pasien.'], 'admin-patients': ['Data Pasien','Data kelinci tersimpan dari portal customer.'],
+      'doctor-dashboard': ['Dashboard Dokter','Pasien yang diarahkan admin ke dokter.'], 'doctor-exam': ['Pemeriksaan Pasien','Isi pemeriksaan dan tindakan medis.'],
+      'groomer-dashboard': ['Dashboard Groomer','Pasien yang diarahkan admin ke groomer.'], 'grooming-form': ['Pencatatan Grooming','Pre-check dan hasil perawatan.'],
+      'manager-dashboard': ['Dashboard Manajer','Laporan operasional klinik.']
+    };
+
+    let currentRole = 'owner';
+    let currentPage = 'dashboard';
+    let currentPortal = 'owner';
+    let ownerAuthMode = 'login';
+    let currentUser = { name: '', email: '', phone: '', role: 'owner' };
+    let selectedService = { name: 'Pemeriksaan Umum', price: 150000, department: 'doctor' };
+    let selectedSlot = '10.00';
+    let selectedPaymentKey = 'bank';
+    let activeServiceBookingId = null;
+    let selectedHistoryPetId = '';
+    let calendarCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+    const authScreen = document.getElementById('authScreen');
+    const appShell = document.getElementById('appShell');
+
+    document.getElementById('ownerPortalTab').addEventListener('click', () => selectAuthPortal('owner'));
+    document.getElementById('staffPortalTab').addEventListener('click', () => selectAuthPortal('staff'));
+    document.getElementById('ownerLoginTab').addEventListener('click', () => setOwnerAuthMode('login'));
+    document.getElementById('ownerRegisterTab').addEventListener('click', () => setOwnerAuthMode('register'));
+    document.getElementById('ownerAuthForm').addEventListener('submit', handleOwnerAuth);
+    document.getElementById('staffAuthForm').addEventListener('submit', handleStaffAuth);
+
+    function getAppData() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        return { pets: Array.isArray(parsed.pets) ? parsed.pets : [], bookings: Array.isArray(parsed.bookings) ? parsed.bookings : [] };
+      } catch { return { pets: [], bookings: [] }; }
+    }
+    function saveAppData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    function getStoredOwners() { try { return JSON.parse(localStorage.getItem(OWNER_KEY) || '{}'); } catch { return {}; } }
+    function saveStoredOwners(owners) { localStorage.setItem(OWNER_KEY, JSON.stringify(owners)); }
+    function ownerEmail() { return String(currentUser.email || '').trim().toLowerCase(); }
+    function nameFromEmail(email) { const p=String(email||'').split('@')[0].replace(/[._-]+/g,' ').trim(); return p ? p.replace(/\w/g,c=>c.toUpperCase()) : 'Pemilik RabbitCare'; }
+    function getInitials(name) { return String(name||'RC').trim().split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0].toUpperCase()).join('') || 'RC'; }
+    function money(value) { return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(value||0)); }
+    function formatDate(value) { if(!value) return '-'; return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(value+'T00:00:00')); }
+    function escapeHtml(value) { return String(value??'').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function uid(prefix) { return `${prefix}-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`; }
+
+    function selectAuthPortal(portal) {
+      currentPortal = portal; const ownerPortal = portal === 'owner';
+      document.getElementById('ownerPortalTab').classList.toggle('active', ownerPortal);
+      document.getElementById('staffPortalTab').classList.toggle('active', !ownerPortal);
+      document.getElementById('ownerAuthPanel').classList.toggle('hidden', !ownerPortal);
+      document.getElementById('staffAuthPanel').classList.toggle('hidden', ownerPortal);
+      document.getElementById('authTitle').textContent = ownerPortal ? 'Portal Pemilik' : 'Portal Klinik';
+      document.getElementById('authDesc').textContent = ownerPortal ? 'Masuk atau daftar untuk mengelola profil dan perawatan kelinci Anda.' : 'Login khusus admin, dokter, groomer, dan manajer klinik.';
+    }
+    function setOwnerAuthMode(mode) {
+      ownerAuthMode=mode; const register=mode==='register';
+      document.getElementById('ownerLoginTab').classList.toggle('active',!register);
+      document.getElementById('ownerRegisterTab').classList.toggle('active',register);
+      document.getElementById('ownerRegisterFields').classList.toggle('hidden',!register);
+      document.getElementById('ownerFullName').required=register; document.getElementById('ownerPhone').required=register;
+      document.getElementById('ownerAuthSubmit').textContent=register?'Daftar sebagai Pemilik':'Masuk ke Portal Pemilik';
+    }
+    function handleOwnerAuth(event) {
+      event.preventDefault();
+      const email=document.getElementById('ownerEmail').value.trim().toLowerCase(); const password=document.getElementById('ownerPassword').value; const owners=getStoredOwners(); let account=owners[email];
+      if(ownerAuthMode==='register') {
+        const name=document.getElementById('ownerFullName').value.trim(); const phone=document.getElementById('ownerPhone').value.trim();
+        if(!name||!phone) return showToast('danger','Data belum lengkap','Nama lengkap dan nomor telepon wajib diisi.');
+        if(owners[email]) return showToast('warning','Email sudah terdaftar','Gunakan menu Masuk.');
+        account={name,email,phone,password}; owners[email]=account; saveStoredOwners(owners);
+      } else {
+        if(account && account.password!==password) return showToast('danger','Login gagal','Kata sandi tidak sesuai.');
+        if(!account) { account={name:nameFromEmail(email),email,phone:'',password}; owners[email]=account; saveStoredOwners(owners); }
+      }
+      localStorage.setItem('rabbitcareLastOwnerName',account.name); if(account.phone) localStorage.setItem('rabbitcareLastOwnerPhone',account.phone);
+      startSession('owner',account); showToast('success',ownerAuthMode==='register'?'Pendaftaran berhasil':'Berhasil masuk',`Selamat datang, ${account.name}.`);
+    }
+    function handleStaffAuth(event) {
+      event.preventDefault(); const role=document.getElementById('staffRole').value;
+      if(role==='owner'||!roleData[role]) return showToast('danger','Akses ditolak','Gunakan Portal Pemilik untuk customer.');
+      const account={name:document.getElementById('staffName').value.trim(),email:document.getElementById('staffEmail').value.trim().toLowerCase(),phone:'',role};
+      startSession(role,account); showToast('success','Berhasil masuk',`Anda masuk sebagai ${roleData[role].label}.`);
+    }
+    function startSession(role,account) {
+      currentRole=role; currentUser={...account,role}; selectedHistoryPetId=''; calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1); authScreen.classList.add('hidden'); appShell.classList.remove('hidden'); document.getElementById('demoBanner').classList.remove('hidden');
+      updateOwnerIdentity(); renderRole(); refreshDataViews();
+    }
+    function updateOwnerIdentity() {
+      const ownerName=currentRole==='owner'?currentUser.name:(localStorage.getItem('rabbitcareLastOwnerName')||'Pemilik Contoh');
+      const ownerPhone=currentRole==='owner'?(currentUser.phone||localStorage.getItem('rabbitcareLastOwnerPhone')||'08xx-xxxx-xxxx'):(localStorage.getItem('rabbitcareLastOwnerPhone')||'08xx-xxxx-xxxx');
+      const greeting=document.getElementById('ownerGreetingName'); if(greeting) greeting.textContent=ownerName;
+      document.querySelectorAll('[data-owner-name]').forEach(el=>el.textContent=ownerName); document.querySelectorAll('[data-owner-phone]').forEach(el=>el.textContent=ownerPhone);
+    }
+    function renderRole() {
+      const role=roleData[currentRole]; document.getElementById('sidebarAvatar').textContent=getInitials(currentUser.name); document.getElementById('sidebarName').textContent=currentUser.name; document.getElementById('sidebarRole').textContent=role.label; document.getElementById('topbarRoleBadge').textContent=`${role.portalLabel} • ${role.label}`;
+      document.getElementById('mainNav').innerHTML=role.nav.map(item=>`<button class="nav-link" data-page="${item[0]}" onclick="navigate('${item[0]}')"><span class="nav-icon">${item[1]}</span>${item[2]}${item[3]?`<span class="nav-badge">${item[3]}</span>`:''}</button>`).join('');
+      navigate(role.defaultPage);
+    }
+    function getAllowedPages() {
+      const pages = new Set(roleData[currentRole].nav.map(i=>i[0]));
+      if(currentRole==='doctor') pages.add('doctor-exam');
+      if(currentRole==='groomer') pages.add('grooming-form');
+      return pages;
+    }
+    function navigate(page) {
+      if(!getAllowedPages().has(page)) return showToast('danger','Akses ditolak',`Akun ${roleData[currentRole].label} tidak memiliki izin membuka halaman tersebut.`);
+      const target=document.getElementById(`page-${page}`); if(!target) return showToast('info','Halaman prototype','Halaman belum tersedia.');
+      document.querySelectorAll('.page').forEach(el=>el.classList.remove('active')); target.classList.add('active'); currentPage=page;
+      document.querySelectorAll('.nav-link[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+      const meta=pageMeta[page]||['RabbitCare','Prototype aplikasi RabbitCare.']; document.getElementById('pageTitle').textContent=meta[0]; document.getElementById('pageSubtitle').textContent=meta[1];
+      refreshDataViews();
+      if(page==='doctor-exam') populateDoctorExam();
+      if(page==='grooming-form') populateGroomingForm();
+      window.scrollTo({top:0,behavior:'smooth'}); toggleSidebar(false);
+    }
+    function openNotifications() { if(getAllowedPages().has('reminders')) navigate('reminders'); else showToast('info','Notifikasi','Lihat notifikasi melalui dashboard.'); }
+    function toggleSidebar(open) { document.getElementById('sidebar').classList.toggle('open',open); document.getElementById('sidebarOverlay').classList.toggle('show',open); }
+    function logout() { const prev=currentRole; appShell.classList.add('hidden'); authScreen.classList.remove('hidden'); document.getElementById('demoBanner').classList.add('hidden'); currentUser={name:'',email:'',phone:'',role:'owner'}; activeServiceBookingId=null; selectAuthPortal(prev==='owner'?'owner':'staff'); showToast('info','Keluar dari akun','Sesi prototype diakhiri.'); }
+    function showToast(type,title,message) { const icons={success:'✅',info:'💡',danger:'⚠️',warning:'⏳'}; document.getElementById('toastIcon').textContent=icons[type]||'✅'; document.getElementById('toastTitle').textContent=title; document.getElementById('toastMessage').textContent=message; const toast=document.getElementById('toast'); toast.classList.add('show'); clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>toast.classList.remove('show'),3400); }
+
+    function refreshDataViews() {
+      renderPets(); renderBookingPetOptions(); renderOwnerDashboard(); renderCalendar(); renderHistory(); renderReminders(); renderInvoices(); renderAdminBookings(); renderAdminDashboard(); renderAdminPatients(); renderStaffQueues(); renderManagerDashboard();
+    }
+    function ownerPets(data=getAppData()) { return data.pets.filter(p=>p.ownerEmail===ownerEmail()); }
+    function ownerBookings(data=getAppData()) { return data.bookings.filter(b=>b.ownerEmail===ownerEmail()).sort((a,b)=>b.createdAt.localeCompare(a.createdAt)); }
+
+    function renderPets() {
+      const grid=document.getElementById('petGrid'); const empty=document.getElementById('petEmpty'); if(!grid||!empty) return;
+      if(currentRole!=='owner') return;
+      const pets=ownerPets(); empty.classList.toggle('hidden',pets.length>0); grid.classList.toggle('hidden',pets.length===0);
+      grid.innerHTML=pets.map(p=>`<article class="pet-card"><div class="pet-card-head"><div class="pet-avatar">🐇</div><div><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.id)} • ${escapeHtml(p.breed)}</p><span class="status success" style="margin-top:8px">Aktif</span></div></div><div class="pet-stats"><div class="pet-stat"><small>Tanggal lahir</small><strong>${formatDate(p.birthDate)}</strong></div><div class="pet-stat"><small>Berat</small><strong>${escapeHtml(p.weight)} kg</strong></div><div class="pet-stat"><small>Kelamin</small><strong>${escapeHtml(p.gender)}</strong></div></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-secondary" onclick="navigate('booking');selectPetForBooking('${p.id}')">Booking</button><button class="btn btn-ghost" onclick="openEditPetModal('${p.id}')">Edit</button></div></article>`).join('');
+    }
+    function renderBookingPetOptions() {
+      const select=document.getElementById('bookingPet'); if(!select) return; const pets=currentRole==='owner'?ownerPets():[]; const prior=select.value;
+      select.innerHTML=pets.length?pets.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} • ${escapeHtml(p.id)}</option>`).join(''):'<option value="">Belum ada profil kelinci</option>';
+      if(pets.some(p=>p.id===prior)) select.value=prior;
+      const noPet=!pets.length; document.getElementById('bookingNoPetWarning')?.classList.toggle('hidden',!noPet); const btn=document.getElementById('confirmBookingBtn'); if(btn) btn.disabled=noPet;
+      updateBookingSummary();
+    }
+    function selectPetForBooking(id) { const s=document.getElementById('bookingPet'); if(s){s.value=id;updateBookingSummary();} }
+    function renderOwnerDashboard() {
+      if(currentRole!=='owner') return;
+      const data=getAppData();
+      const pets=ownerPets(data);
+      const bookings=ownerBookings(data);
+      const active=bookings.filter(b=>!['SELESAI','DIBATALKAN'].includes(b.status));
+      const waiting=bookings.filter(b=>b.payment.status!=='PAID');
+      const reminders=getScopedReminders(data);
+      setText('ownerTodayLabel',new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()));
+      setText('ownerStatPets',pets.length);
+      setText('ownerStatBookings',active.length);
+      setText('ownerStatInvoices',waiting.length);
+      setText('ownerStatInvoiceAmount',money(waiting.reduce((s,b)=>s+b.price,0)));
+      setText('ownerStatReminders',reminders.length);
+      setText('ownerStatReminderNote',reminders.length?`${reminders.filter(r=>r.status==='SCHEDULED').length} terjadwal`:'belum ada reminder');
+      const first=pets[0];
+      setText('ownerHeroPetName',first?first.name:'Belum ada kelinci');
+      setText('ownerHeroPetMeta',first?`${first.breed} • ${first.weight} kg`:'Tambahkan profil pertama Anda');
+      const badgeEl=document.getElementById('ownerHeroPetStatus');
+      if(badgeEl){badgeEl.textContent=first?'Data Tersimpan':'Belum Ada Data';badgeEl.className=`status ${first?'success':'warning'}`;}
+      setText('ownerHeroText',pets.length?`Anda memiliki ${pets.length} profil kelinci dan ${active.length} booking aktif.`:'Tambahkan profil kelinci, buat booking, lalu selesaikan pembayaran agar layanan dapat dikonfirmasi admin.');
+
+      const upcoming=bookings.filter(b=>!['SELESAI','DIBATALKAN'].includes(b.status)).sort((a,b)=>`${a.date} ${a.slot}`.localeCompare(`${b.date} ${b.slot}`)).slice(0,5);
+      const upcomingBox=document.getElementById('ownerUpcomingBookings');
+      const upcomingEmpty=document.getElementById('ownerUpcomingEmpty');
+      if(upcomingBox){
+        upcomingBox.innerHTML=upcoming.map(b=>{const d=new Date(`${b.date}T00:00:00`);const si=statusInfo(b.status);return `<div class="booking-item"><div class="date-box"><strong>${d.getDate()}</strong><span>${new Intl.DateTimeFormat('id-ID',{month:'short'}).format(d)}</span></div><div class="item-main"><strong>${escapeHtml(b.service)} • ${escapeHtml(b.petName)}</strong><small>${escapeHtml(b.slot)} WIB • ${escapeHtml(b.assignedStaff||'Belum diarahkan')} • ${escapeHtml(b.code)}</small></div>${badge(si[0],si[1])}<div class="item-actions"><button class="icon-btn" onclick="showBookingDetail('${b.id}')">›</button></div></div>`;}).join('');
+        upcomingBox.classList.toggle('hidden',upcoming.length===0);
+      }
+      if(upcomingEmpty) upcomingEmpty.classList.toggle('hidden',upcoming.length>0);
+
+      const reminderBox=document.getElementById('ownerDashboardReminders');
+      const reminderEmpty=document.getElementById('ownerDashboardReminderEmpty');
+      if(reminderBox){
+        reminderBox.innerHTML=reminders.slice(0,4).map(r=>`<div class="reminder-item"><div class="stat-icon ${r.type.toLowerCase().includes('groom')?'green':'orange'}">${r.type.toLowerCase().includes('groom')?'✂️':'🔔'}</div><div class="item-main"><strong>${escapeHtml(r.type)} untuk ${escapeHtml(r.petName)}</strong><small>${formatDate(r.dueDate)} • ${escapeHtml(r.service)}</small></div>${badge(reminderStatusInfo(r.status)[0],reminderStatusInfo(r.status)[1])}</div>`).join('');
+        reminderBox.classList.toggle('hidden',reminders.length===0);
+      }
+      if(reminderEmpty) reminderEmpty.classList.toggle('hidden',reminders.length>0);
+
+      const health=document.getElementById('ownerHealthSummary');
+      const healthEmpty=document.getElementById('ownerHealthEmpty');
+      if(health){
+        health.innerHTML=pets.map(p=>{const width=Math.max(12,Math.min(100,Number(p.weight||0)*35));return `<div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px">Berat ${escapeHtml(p.name)}</span><strong>${escapeHtml(p.weight)} kg</strong></div><div class="progress"><span style="width:${width}%"></span></div><small style="display:block;margin-top:7px;color:var(--muted)">${escapeHtml(p.breed)} • ${escapeHtml(p.gender)} • steril: ${escapeHtml(p.sterilized)}</small></div>`;}).join('');
+        health.classList.toggle('hidden',pets.length===0);
+      }
+      if(healthEmpty) healthEmpty.classList.toggle('hidden',pets.length>0);
+    }
+    function setText(id,value) { const el=document.getElementById(id); if(el) el.textContent=String(value); }
+
+    function openPetModal() {
+      if(currentRole!=='owner') return showToast('danger','Akses ditolak','Profil kelinci baru dibuat melalui Portal Pemilik.');
+      document.getElementById('modalTitle').textContent='Tambah Profil Kelinci';
+      document.getElementById('modalBody').innerHTML=`<form onsubmit="addPet(event)"><div class="grid grid-2"><div class="field"><label>Nama kelinci</label><input id="newPetName" required placeholder="Contoh: Snowy"></div><div class="field"><label>Ras</label><input id="newPetBreed" required placeholder="Contoh: Lionhead"></div></div><div class="grid grid-2"><div class="field"><label>Jenis kelamin</label><select id="newPetGender"><option>Jantan</option><option>Betina</option></select></div><div class="field"><label>Tanggal lahir</label><input id="newPetBirthDate" type="date" required></div></div><div class="grid grid-2"><div class="field"><label>Warna</label><input id="newPetColor" required placeholder="Putih kecokelatan"></div><div class="field"><label>Berat (kg)</label><input id="newPetWeight" type="number" min="0.1" step="0.1" value="1.5" required></div></div><div class="field"><label>Status steril</label><select id="newPetSteril"><option>Belum</option><option>Sudah</option></select></div><div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary">Simpan Profil</button></div></form>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+    function addPet(event) {
+      event.preventDefault(); const data=getAppData();
+      const pet={id:`RC-PET-${String(Date.now()).slice(-7)}`,ownerEmail:ownerEmail(),ownerName:currentUser.name,ownerPhone:currentUser.phone||'',name:document.getElementById('newPetName').value.trim(),breed:document.getElementById('newPetBreed').value.trim(),gender:document.getElementById('newPetGender').value,birthDate:document.getElementById('newPetBirthDate').value,color:document.getElementById('newPetColor').value.trim(),weight:document.getElementById('newPetWeight').value,sterilized:document.getElementById('newPetSteril').value,createdAt:new Date().toISOString()};
+      data.pets.push(pet); saveAppData(data); closeModal(); refreshDataViews(); showToast('success','Profil kelinci tersimpan',`${pet.name} berhasil disimpan dengan ID ${pet.id}.`);
+    }
+    function openEditPetModal(id) {
+      const data=getAppData(); const p=data.pets.find(x=>x.id===id&&x.ownerEmail===ownerEmail()); if(!p) return;
+      document.getElementById('modalTitle').textContent='Edit Profil Kelinci';
+      document.getElementById('modalBody').innerHTML=`<form onsubmit="savePetEdit(event,'${p.id}')"><div class="grid grid-2"><div class="field"><label>Nama kelinci</label><input id="editPetName" value="${escapeHtml(p.name)}" required></div><div class="field"><label>Ras</label><input id="editPetBreed" value="${escapeHtml(p.breed)}" required></div></div><div class="grid grid-2"><div class="field"><label>Jenis kelamin</label><select id="editPetGender"><option ${p.gender==='Jantan'?'selected':''}>Jantan</option><option ${p.gender==='Betina'?'selected':''}>Betina</option></select></div><div class="field"><label>Tanggal lahir</label><input id="editPetBirthDate" type="date" value="${p.birthDate}" required></div></div><div class="grid grid-2"><div class="field"><label>Warna</label><input id="editPetColor" value="${escapeHtml(p.color)}" required></div><div class="field"><label>Berat (kg)</label><input id="editPetWeight" type="number" min="0.1" step="0.1" value="${p.weight}" required></div></div><div class="field"><label>Status steril</label><select id="editPetSteril"><option ${p.sterilized==='Belum'?'selected':''}>Belum</option><option ${p.sterilized==='Sudah'?'selected':''}>Sudah</option></select></div><div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary">Simpan Perubahan</button></div></form>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+    function savePetEdit(event,id) {
+      event.preventDefault(); const data=getAppData(); const p=data.pets.find(x=>x.id===id&&x.ownerEmail===ownerEmail()); if(!p) return;
+      Object.assign(p,{name:document.getElementById('editPetName').value.trim(),breed:document.getElementById('editPetBreed').value.trim(),gender:document.getElementById('editPetGender').value,birthDate:document.getElementById('editPetBirthDate').value,color:document.getElementById('editPetColor').value.trim(),weight:document.getElementById('editPetWeight').value,sterilized:document.getElementById('editPetSteril').value}); saveAppData(data); closeModal(); refreshDataViews(); showToast('success','Profil diperbarui','Perubahan data kelinci berhasil disimpan.');
+    }
+
+    function selectService(button) {
+      document.querySelectorAll('.service-card').forEach(el=>el.classList.remove('active')); button.classList.add('active'); selectedService={name:button.dataset.service,price:Number(button.dataset.price),department:button.dataset.department};
+      const dep=selectedService.department==='groomer'?'Groomer / Pet Care':'Dokter Hewan'; const depInput=document.getElementById('bookingDepartment'); if(depInput) depInput.value=dep; updateBookingSummary();
+    }
+    function selectSlot(button) { document.querySelectorAll('.slot').forEach(el=>el.classList.remove('active')); button.classList.add('active'); selectedSlot=button.textContent.trim(); updateBookingSummary(); }
+    function updateBookingSummary() {
+      const data=getAppData(); const petId=document.getElementById('bookingPet')?.value; const pet=data.pets.find(p=>p.id===petId); const dateValue=document.getElementById('bookingDate')?.value; const dep=selectedService.department==='groomer'?'Groomer / Pet Care':'Dokter Hewan';
+      setText('summaryPet',pet?pet.name:'-'); setText('summaryService',selectedService.name); setText('summaryStaff',dep); setText('summarySchedule',dateValue?`${formatDate(dateValue)} • ${selectedSlot}`:'-'); setText('summaryPrice',money(selectedService.price));
+    }
+    function confirmBooking() {
+      if(currentRole!=='owner') return showToast('danger','Akses ditolak','Booking customer dibuat melalui Portal Pemilik.');
+      const data=getAppData(); const petId=document.getElementById('bookingPet').value; const pet=data.pets.find(p=>p.id===petId&&p.ownerEmail===ownerEmail()); const date=document.getElementById('bookingDate').value; const note=document.getElementById('bookingNote').value.trim();
+      if(!pet) return showToast('danger','Profil kelinci belum dipilih','Tambahkan atau pilih profil kelinci.'); if(!date) return showToast('danger','Tanggal belum dipilih','Pilih tanggal booking.');
+      const clash=data.bookings.find(b=>b.date===date&&b.slot===selectedSlot&&b.department===selectedService.department&&!['DIBATALKAN','SELESAI'].includes(b.status));
+      if(clash) return showToast('danger','Slot tidak tersedia',`Slot ${selectedSlot} untuk bagian ${selectedService.department==='doctor'?'dokter':'grooming'} sudah terisi.`);
+      const code=`RC-${new Date().toISOString().slice(2,10).replace(/-/g,'')}-${String(Date.now()).slice(-4)}`; const invoiceId=`INV-${code}`;
+      const booking={id:uid('BOOK'),code,invoiceId,ownerEmail:ownerEmail(),ownerName:currentUser.name,ownerPhone:currentUser.phone||'',petId:pet.id,petName:pet.name,service:selectedService.name,price:selectedService.price,department:selectedService.department,date,slot:selectedSlot,note,status:'MENUNGGU_PEMBAYARAN',payment:{status:'UNPAID',method:'',channel:'',destination:'',payerName:'',submittedAt:null,validatedAt:null,validatedBy:null},assignedRole:'',assignedStaff:'',queueNumber:'',checkedInAt:null,createdAt:new Date().toISOString()};
+      data.bookings.push(booking); saveAppData(data); document.getElementById('bookingNote').value=''; refreshDataViews(); showToast('success','Booking masuk ke Portal Admin',`Kode ${code} dibuat. Silakan lakukan pembayaran ${money(booking.price)}.`); navigate('invoices'); setTimeout(()=>openPaymentModal(booking.id),500);
+    }
+
+    function statusInfo(status) {
+      const map={MENUNGGU_PEMBAYARAN:['Menunggu Pembayaran','warning'],MENUNGGU_VALIDASI:['Menunggu Validasi Admin','info'],TERKONFIRMASI:['Pembayaran Valid / Terkonfirmasi','success'],CHECK_IN:['Check-in','info'],DIARAHKAN_DOKTER:['Diarahkan ke Dokter','info'],DIARAHKAN_GROOMER:['Diarahkan ke Groomer','info'],SEDANG_DILAYANI:['Sedang Dilayani','warning'],PERLU_RUJUKAN:['Perlu Rujukan Dokter','danger'],SELESAI:['Selesai','success'],DIBATALKAN:['Dibatalkan','danger']}; return map[status]||[status,'info'];
+    }
+    function paymentInfo(status) { const map={UNPAID:['Belum Dibayar','warning'],SUBMITTED:['Menunggu Validasi','info'],PAID:['Tervalidasi','success'],REJECTED:['Ditolak Admin','danger']}; return map[status]||[status,'info']; }
+    function badge(text,cls) { return `<span class="status ${cls}">${escapeHtml(text)}</span>`; }
+
+
+    function scopedPets(data=getAppData()) {
+      if(currentRole==='owner') return ownerPets(data);
+      if(currentRole==='doctor') {
+        const ids=new Set(data.bookings.filter(b=>b.assignedRole==='doctor'||b.completedRole==='doctor').map(b=>b.petId));
+        return data.pets.filter(p=>ids.has(p.id));
+      }
+      if(currentRole==='groomer') {
+        const ids=new Set(data.bookings.filter(b=>b.assignedRole==='groomer'||b.completedRole==='groomer').map(b=>b.petId));
+        return data.pets.filter(p=>ids.has(p.id));
+      }
+      return data.pets.slice();
+    }
+
+    function scopedBookings(data=getAppData()) {
+      if(currentRole==='owner') return ownerBookings(data);
+      if(currentRole==='doctor') return data.bookings.filter(b=>b.assignedRole==='doctor'||b.completedRole==='doctor');
+      if(currentRole==='groomer') return data.bookings.filter(b=>b.assignedRole==='groomer'||b.completedRole==='groomer');
+      return data.bookings.slice();
+    }
+
+    function localDateKey(date) {
+      const y=date.getFullYear(); const m=String(date.getMonth()+1).padStart(2,'0'); const d=String(date.getDate()).padStart(2,'0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function changeCalendarMonth(delta) {
+      calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+delta,1);
+      renderCalendar();
+    }
+    function goToCurrentCalendarMonth() {
+      calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const grid=document.getElementById('calendarGrid'); if(!grid) return;
+      const data=getAppData();
+      const bookings=scopedBookings(data).filter(b=>b.status!=='DIBATALKAN');
+      const reminders=getScopedReminders(data);
+      setText('calendarMonthLabel',new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(calendarCursor));
+      const scopeText=currentRole==='owner'?'Hanya booking dan reminder milik akun Anda yang ditampilkan.':currentRole==='admin'?'Menampilkan seluruh booking klinik untuk pengelolaan admin.':currentRole==='doctor'?'Menampilkan pasien yang diarahkan atau pernah ditangani dokter.':currentRole==='groomer'?'Menampilkan pasien yang diarahkan atau pernah ditangani groomer.':'Menampilkan ringkasan jadwal seluruh klinik.';
+      setText('calendarScopeText',scopeText);
+
+      const events={};
+      bookings.forEach(b=>{
+        if(!events[b.date]) events[b.date]=[];
+        events[b.date].push({kind:'booking',id:b.id,label:`${b.slot} ${b.petName}`,detail:`${b.service} • ${statusInfo(b.status)[0]}`,grooming:b.department==='groomer'});
+      });
+      reminders.forEach(r=>{
+        if(!events[r.dueDate]) events[r.dueDate]=[];
+        events[r.dueDate].push({kind:'reminder',label:`🔔 ${r.petName}`,detail:r.type,grooming:r.type.toLowerCase().includes('groom')});
+      });
+
+      const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
+      const startOffset=(first.getDay()+6)%7;
+      const start=new Date(first.getFullYear(),first.getMonth(),1-startOffset);
+      const todayKey=localDateKey(new Date());
+      const heads=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div class="cal-head">${x}</div>`).join('');
+      let cells=''; let monthEventCount=0;
+      for(let i=0;i<42;i++) {
+        const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i);
+        const key=localDateKey(d); const dayEvents=events[key]||[];
+        if(d.getMonth()===calendarCursor.getMonth()) monthEventCount+=dayEvents.length;
+        const classes=['cal-day'];
+        if(d.getMonth()!==calendarCursor.getMonth()) classes.push('muted');
+        if(key===todayKey) classes.push('today');
+        const eventHtml=dayEvents.slice(0,2).map(e=>`<span class="cal-event ${e.grooming?'orange':''}" title="${escapeHtml(e.detail)}" ${e.kind==='booking'?`onclick="showBookingDetail('${e.id}')" style="cursor:pointer"`:''}>${escapeHtml(e.label)}</span>`).join('');
+        const more=dayEvents.length>2?`<span class="cal-event" title="${dayEvents.length-2} agenda lain">+${dayEvents.length-2} agenda</span>`:'';
+        cells+=`<div class="${classes.join(' ')}"><span class="cal-num">${d.getDate()}</span>${eventHtml}${more}</div>`;
+      }
+      grid.innerHTML=heads+cells;
+      document.getElementById('calendarEmpty')?.classList.toggle('hidden',monthEventCount>0);
+    }
+
+    function buildHistoryEntries(petId,data=getAppData()) {
+      const entries=[];
+      data.bookings.filter(b=>b.petId===petId).forEach(b=>{
+        const date=(b.completedAt||b.date||'').slice(0,10);
+        if(b.medicalRecord) {
+          const isVaccination=String(b.service||'').toLowerCase().includes('vaksin');
+          const r=b.medicalRecord;
+          const parts=[r.diagnosis?`Diagnosis: ${r.diagnosis}`:'',r.action?`Tindakan: ${r.action}`:'',r.prescription?`Resep: ${r.prescription}`:''].filter(Boolean);
+          entries.push({type:isVaccination?'vaccination':'medical',date,title:b.service||'Pemeriksaan Dokter',description:parts.join(' • ')||r.anamnesis||'Pemeriksaan telah diselesaikan.',staff:r.doctor||b.completedBy||b.assignedStaff||'Dokter',status:'Selesai',bookingId:b.id});
+        }
+        if(b.groomingRecord) {
+          const r=b.groomingRecord;
+          const parts=[r.result?`Hasil: ${r.result}`:'',r.finding?`Temuan: ${r.finding}`:''].filter(Boolean);
+          entries.push({type:'grooming',date,title:b.service||'Grooming',description:parts.join(' • ')||r.initialCondition||'Grooming telah diselesaikan.',staff:r.groomer||b.completedBy||b.assignedStaff||'Groomer',status:r.safety==='TIDAK_AMAN'?'Tidak aman':'Selesai',bookingId:b.id});
+        }
+      });
+      return entries.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    }
+
+    function renderHistory() {
+      const select=document.getElementById('historyPetFilter'); if(!select) return;
+      const data=getAppData(); const pets=scopedPets(data); const previous=select.value||selectedHistoryPetId;
+      select.innerHTML=pets.length?pets.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} • ${escapeHtml(p.id)}</option>`).join(''):'<option value="">Belum ada data kelinci</option>';
+      const selected=pets.some(p=>p.id===previous)?previous:(pets[0]?.id||'');
+      select.value=selected; selectedHistoryPetId=selected;
+      const pet=pets.find(p=>p.id===selected);
+      setText('historyPetName',pet?.name||'Belum ada kelinci'); setText('historyPetId',pet?.id||'-'); setText('historyPetBreed',pet?.breed||'-'); setText('historyPetGender',pet?.gender||'-'); setText('historyPetWeight',pet?`${pet.weight} kg`:'-'); setText('historyPetSteril',pet?.sterilized||'-');
+      const filter=document.getElementById('historyTypeFilter')?.value||'all';
+      const entries=pet?buildHistoryEntries(pet.id,data).filter(e=>filter==='all'||e.type===filter):[];
+      const timeline=document.getElementById('historyTimeline'); const empty=document.getElementById('historyEmpty');
+      if(timeline){
+        timeline.innerHTML=entries.map(e=>{const color=e.type==='grooming'?'background:#d0924c;border-color:var(--accent-100)':e.type==='vaccination'?'background:#4e82ae;border-color:var(--info-100)':''; const typeLabel=e.type==='grooming'?'Grooming':e.type==='vaccination'?'Vaksinasi':'Medis'; return `<div class="timeline-item"><div class="timeline-dot" style="${color}"></div><div class="timeline-content"><strong>${escapeHtml(e.title)}</strong><p>${escapeHtml(e.description)}</p><div class="timeline-meta">${badge(e.status,e.status==='Tidak aman'?'danger':'success')}<span class="status neutral">${formatDate(e.date)}</span><span class="status info">${escapeHtml(e.staff)}</span><span class="status neutral">${typeLabel}</span></div></div></div>`;}).join('');
+        timeline.classList.toggle('hidden',entries.length===0);
+      }
+      if(empty) empty.classList.toggle('hidden',entries.length>0);
+    }
+
+    function reminderStatusInfo(status) {
+      const map={SCHEDULED:['Terjadwal','warning'],QUEUED:['Dalam Antrean','info'],SENT:['Terkirim','info'],DELIVERED:['Selesai','success'],FAILED:['Gagal','danger'],CANCELLED:['Dibatalkan','danger']};
+      return map[status]||[status||'Terjadwal','warning'];
+    }
+
+    function getScopedReminders(data=getAppData()) {
+      return scopedBookings(data).filter(b=>b.reminder&&b.reminder.dueDate).map(b=>({bookingId:b.id,petId:b.petId,petName:b.petName,service:b.service,type:b.reminder.type||'Reminder Perawatan',dueDate:b.reminder.dueDate,status:b.reminder.status||'SCHEDULED',ownerName:b.ownerName})).sort((a,b)=>a.dueDate.localeCompare(b.dueDate));
+    }
+
+    function renderReminders() {
+      const list=document.getElementById('reminderList'); if(!list) return;
+      const reminders=getScopedReminders(); const empty=document.getElementById('reminderEmpty');
+      list.innerHTML=reminders.map(r=>{const info=reminderStatusInfo(r.status); const action=currentRole==='owner'?`<button class="btn btn-secondary" onclick="navigate('booking');selectPetForBooking('${r.petId}')">Booking</button>`:`<button class="btn btn-ghost" onclick="showBookingDetail('${r.bookingId}')">Detail</button>`; return `<div class="reminder-item"><div class="stat-icon ${r.type.toLowerCase().includes('groom')?'green':'orange'}">${r.type.toLowerCase().includes('groom')?'✂️':'🔔'}</div><div class="item-main"><strong>${escapeHtml(r.type)} • ${escapeHtml(r.petName)}</strong><small>${formatDate(r.dueDate)} • ${escapeHtml(r.service)}${currentRole==='owner'?'':` • ${escapeHtml(r.ownerName)}`}</small></div>${badge(info[0],info[1])}${action}</div>`;}).join('');
+      list.classList.toggle('hidden',reminders.length===0); if(empty) empty.classList.toggle('hidden',reminders.length>0);
+      setText('reminderScheduledCount',reminders.filter(r=>['SCHEDULED','QUEUED'].includes(r.status)).length); setText('reminderDeliveredCount',reminders.filter(r=>['SENT','DELIVERED'].includes(r.status)).length); setText('reminderFailedCount',reminders.filter(r=>r.status==='FAILED').length); setText('reminderTotalCount',reminders.length);
+      const nav=document.querySelector('.nav-link[data-page="reminders"]'); if(nav){let badgeEl=nav.querySelector('.nav-badge'); if(reminders.length){if(!badgeEl){badgeEl=document.createElement('span');badgeEl.className='nav-badge';nav.appendChild(badgeEl);}badgeEl.textContent=reminders.length;}else badgeEl?.remove();}
+    }
+
+    function renderInvoices() {
+      const list=document.getElementById('invoiceList'); const empty=document.getElementById('invoiceEmpty'); if(!list||!empty) return; const data=getAppData();
+      const bookings=(currentRole==='owner'?ownerBookings(data):data.bookings.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)));
+      const total=bookings.reduce((s,b)=>s+b.price,0); const paid=bookings.filter(b=>b.payment.status==='PAID'); const pending=bookings.filter(b=>b.payment.status!=='PAID');
+      setText('invoiceTotalAmount',money(total)); setText('invoiceTotalCount',`${bookings.length} transaksi`); setText('invoicePaidAmount',money(paid.reduce((s,b)=>s+b.price,0))); setText('invoicePaidCount',`${paid.length} transaksi`); setText('invoicePendingAmount',money(pending.reduce((s,b)=>s+b.price,0))); setText('invoicePendingCount',`${pending.length} transaksi`);
+      const hint=document.getElementById('invoiceRoleHint'); if(hint) hint.textContent=currentRole==='owner'?'Pembayaran Customer':currentRole==='admin'?'Validasi Pembayaran Admin':'Laporan Pembayaran Klinik';
+      empty.classList.toggle('hidden',bookings.length>0); list.classList.toggle('hidden',bookings.length===0);
+      list.innerHTML=bookings.map(b=>{ const pi=paymentInfo(b.payment.status); const si=statusInfo(b.status); let action='';
+        if(currentRole==='owner') { if(['UNPAID','REJECTED'].includes(b.payment.status)) action=`<button class="btn btn-primary" onclick="openPaymentModal('${b.id}')">Bayar</button>`; else if(b.payment.status==='SUBMITTED') action=`<button class="btn btn-ghost" onclick="showPaymentDetail('${b.id}')">Lihat Pengajuan</button>`; else action=`<button class="btn btn-ghost" onclick="showPaymentDetail('${b.id}')">Bukti</button>`; }
+        else if(currentRole==='admin') { if(b.payment.status==='SUBMITTED') action=`<button class="btn btn-primary" onclick="reviewPayment('${b.id}')">Validasi</button>`; else action=`<button class="btn btn-ghost" onclick="showPaymentDetail('${b.id}')">Detail</button>`; }
+        else action=`<button class="btn btn-ghost" onclick="showPaymentDetail('${b.id}')">Detail</button>`;
+        return `<div class="invoice-item"><div class="stat-icon ${b.payment.status==='PAID'?'green':'orange'}">🧾</div><div class="item-main"><strong>${escapeHtml(b.invoiceId)}</strong><small>${escapeHtml(b.service)} • ${escapeHtml(b.petName)} • ${formatDate(b.date)} ${b.slot}</small><small>${currentRole==='owner'?'':escapeHtml(b.ownerName)+' • '}Status layanan: ${si[0]}</small></div><strong>${money(b.price)}</strong>${badge(pi[0],pi[1])}${action}</div>`;
+      }).join('');
+    }
+    function openPaymentModal(id) {
+      if(currentRole!=='owner') return; const b=getAppData().bookings.find(x=>x.id===id&&x.ownerEmail===ownerEmail()); if(!b) return; selectedPaymentKey='bank';
+      document.getElementById('modalTitle').textContent=`Pembayaran ${b.invoiceId}`;
+      document.getElementById('modalBody').innerHTML=`<form onsubmit="submitPayment(event,'${b.id}')"><div class="payment-summary-card"><div class="summary-line"><span>Booking</span><strong>${escapeHtml(b.code)}</strong></div><div class="summary-line"><span>Layanan</span><strong>${escapeHtml(b.service)} • ${escapeHtml(b.petName)}</strong></div><div class="summary-line"><span>Total</span><strong>${money(b.price)}</strong></div></div><div class="field" style="margin-top:16px"><label>Pilih metode pembayaran</label><div class="payment-method-grid">${Object.entries(PAYMENT_DESTINATIONS).map(([key,p],i)=>`<button type="button" class="payment-option ${i===0?'active':''}" data-payment-key="${key}" onclick="selectPaymentMethod('${key}')"><span>${p.icon}</span><span><strong>${p.channel}</strong><small>${key==='bank'?'Transfer rekening':key==='qris'?'Scan QR code':'Nomor e-wallet'}</small></span></button>`).join('')}</div></div><div id="paymentInstruction"></div><div class="field"><label>Nama pengirim</label><input id="paymentPayerName" required placeholder="Nama pemilik rekening atau akun e-wallet"></div><div class="flow-note" style="margin-bottom:16px">Setelah dikirim, status menjadi <strong>Menunggu Validasi Admin</strong>. Admin akan memeriksa pembayaran sebelum booking dapat check-in dan diarahkan ke petugas.</div><div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary">Saya Sudah Membayar</button></div></form>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden'); renderPaymentInstruction();
+    }
+    function selectPaymentMethod(key) { selectedPaymentKey=key; document.querySelectorAll('.payment-option').forEach(el=>el.classList.toggle('active',el.dataset.paymentKey===key)); renderPaymentInstruction(); }
+    function renderPaymentInstruction() {
+      const box=document.getElementById('paymentInstruction'); if(!box) return; const p=PAYMENT_DESTINATIONS[selectedPaymentKey];
+      if(selectedPaymentKey==='qris') box.innerHTML=`<div class="payment-instruction"><strong>Scan QRIS RabbitCare</strong><p style="color:var(--muted);font-size:13px">Masukkan nominal sesuai total tagihan pada aplikasi pembayaran Anda.</p><div class="qr-box"><img src="${QRIS_IMAGE}" alt="QR Code QRIS RabbitCare"></div><div class="prototype-disclaimer">QR code ini digunakan untuk simulasi prototype dan bukan QRIS transaksi nyata.</div></div>`;
+      else box.innerHTML=`<div class="payment-instruction"><strong>${p.channel}</strong><p style="color:var(--muted);font-size:13px">Kirim pembayaran sesuai total tagihan ke tujuan berikut:</p><div class="payment-destination"><div><small>Nomor tujuan</small><br><code>${p.destination}</code></div><div><small>Atas nama</small><br><strong>${p.owner}</strong></div></div></div>`;
+    }
+    function submitPayment(event,id) {
+      event.preventDefault(); const data=getAppData(); const b=data.bookings.find(x=>x.id===id&&x.ownerEmail===ownerEmail()); if(!b) return; const p=PAYMENT_DESTINATIONS[selectedPaymentKey];
+      b.payment={...b.payment,status:'SUBMITTED',method:p.method,channel:p.channel,destination:p.destination,payerName:document.getElementById('paymentPayerName').value.trim(),submittedAt:new Date().toISOString(),validatedAt:null,validatedBy:null}; b.status='MENUNGGU_VALIDASI'; saveAppData(data); closeModal(); refreshDataViews(); showToast('success','Pembayaran dikirim ke admin','Admin akan memvalidasi pembayaran sebelum layanan dijadwalkan atau dilaksanakan.');
+    }
+    function showPaymentDetail(id) {
+      const b=getAppData().bookings.find(x=>x.id===id); if(!b) return; const pi=paymentInfo(b.payment.status); document.getElementById('modalTitle').textContent='Detail Pembayaran';
+      document.getElementById('modalBody').innerHTML=`<div class="payment-summary-card"><div class="summary-line"><span>Invoice</span><strong>${escapeHtml(b.invoiceId)}</strong></div><div class="summary-line"><span>Customer</span><strong>${escapeHtml(b.ownerName)}</strong></div><div class="summary-line"><span>Total</span><strong>${money(b.price)}</strong></div><div class="summary-line"><span>Status</span>${badge(pi[0],pi[1])}</div><div class="summary-line"><span>Metode</span><strong>${escapeHtml(b.payment.channel||'-')}</strong></div><div class="summary-line"><span>Tujuan</span><strong>${escapeHtml(b.payment.destination||'-')}</strong></div><div class="summary-line"><span>Nama pengirim</span><strong>${escapeHtml(b.payment.payerName||'-')}</strong></div>${b.payment.validatedAt?`<div class="summary-line"><span>Divalidasi oleh</span><strong>${escapeHtml(b.payment.validatedBy||'Admin')}</strong></div>`:''}</div><button class="btn btn-primary btn-block" style="margin-top:16px" onclick="closeModal()">Tutup</button>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+    function reviewPayment(id) {
+      if(currentRole!=='admin') return; const b=getAppData().bookings.find(x=>x.id===id); if(!b) return; document.getElementById('modalTitle').textContent='Validasi Pembayaran Customer';
+      document.getElementById('modalBody').innerHTML=`<div class="payment-summary-card"><div class="summary-line"><span>Customer</span><strong>${escapeHtml(b.ownerName)}</strong></div><div class="summary-line"><span>Booking</span><strong>${escapeHtml(b.code)} • ${escapeHtml(b.petName)}</strong></div><div class="summary-line"><span>Total</span><strong>${money(b.price)}</strong></div><div class="summary-line"><span>Metode</span><strong>${escapeHtml(b.payment.channel)}</strong></div><div class="summary-line"><span>Tujuan</span><strong>${escapeHtml(b.payment.destination)}</strong></div><div class="summary-line"><span>Nama pengirim</span><strong>${escapeHtml(b.payment.payerName)}</strong></div></div><div class="flow-note" style="margin:16px 0">Validasi pembayaran akan mengubah booking menjadi <strong>Terkonfirmasi</strong> sehingga admin dapat melakukan check-in.</div><div style="display:flex;justify-content:flex-end;gap:10px"><button class="btn btn-danger" onclick="rejectPayment('${b.id}')">Tolak</button><button class="btn btn-primary" onclick="validatePayment('${b.id}')">Validasi Pembayaran</button></div>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+    function validatePayment(id) { const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b||currentRole!=='admin') return; b.payment.status='PAID'; b.payment.validatedAt=new Date().toISOString(); b.payment.validatedBy=currentUser.name; b.status='TERKONFIRMASI'; saveAppData(data); closeModal(); refreshDataViews(); showToast('success','Pembayaran tervalidasi','Booking terkonfirmasi dan dapat dilanjutkan ke check-in.'); }
+    function rejectPayment(id) { const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b||currentRole!=='admin') return; b.payment.status='REJECTED'; b.status='MENUNGGU_PEMBAYARAN'; saveAppData(data); closeModal(); refreshDataViews(); showToast('danger','Pembayaran ditolak','Customer perlu mengirim ulang informasi pembayaran.'); }
+
+    function renderAdminBookings() {
+      const body=document.getElementById('adminBookingBody'); const empty=document.getElementById('adminBookingEmpty'); if(!body||!empty) return; const bookings=getAppData().bookings.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)); empty.classList.toggle('hidden',bookings.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',bookings.length===0);
+      body.innerHTML=bookings.map(b=>{const pi=paymentInfo(b.payment.status),si=statusInfo(b.status); return `<tr><td><span class="booking-code">${escapeHtml(b.code)}</span><br><small>${escapeHtml(b.invoiceId)}</small></td><td><strong>${escapeHtml(b.ownerName)}</strong><br><small>${escapeHtml(b.petName)} • ${escapeHtml(b.petId)}</small></td><td><strong>${escapeHtml(b.service)}</strong><br><small>${formatDate(b.date)} • ${b.slot} • ${b.department==='doctor'?'Dokter':'Groomer'}</small></td><td>${badge(pi[0],pi[1])}<br><small>${escapeHtml(b.payment.channel||'Belum dipilih')}</small></td><td>${badge(si[0],si[1])}${b.assignedStaff?`<br><small>${escapeHtml(b.assignedStaff)}</small>`:''}</td><td>${adminActionHtml(b)}</td></tr>`;}).join('');
+    }
+    function adminActionHtml(b) {
+      if(currentRole!=='admin'&&currentRole!=='manager') return `<button class="btn btn-ghost btn-sm" onclick="showBookingDetail('${b.id}')">Detail</button>`;
+      if(currentRole==='manager') return `<button class="btn btn-ghost btn-sm" onclick="showBookingDetail('${b.id}')">Detail</button>`;
+      if(b.payment.status==='SUBMITTED') return `<button class="btn btn-primary btn-sm" onclick="reviewPayment('${b.id}')">Validasi Bayar</button>`;
+      if(['UNPAID','REJECTED'].includes(b.payment.status)) return `<span class="data-badge">Menunggu Customer</span>`;
+      if(b.status==='TERKONFIRMASI') return `<button class="btn btn-primary btn-sm" onclick="checkInBooking('${b.id}')">Check-in</button>`;
+      if(b.status==='CHECK_IN') return `<button class="btn btn-secondary btn-sm" onclick="openRoutingModal('${b.id}')">Arahkan Petugas</button>`;
+      if(b.status==='PERLU_RUJUKAN') return `<button class="btn btn-primary btn-sm" onclick="openRoutingModal('${b.id}','doctor')">Arahkan ke Dokter</button>`;
+      if(['DIARAHKAN_DOKTER','DIARAHKAN_GROOMER'].includes(b.status)) return `<button class="btn btn-ghost btn-sm" onclick="showBookingDetail('${b.id}')">Menunggu Petugas</button>`;
+      if(b.status==='SEDANG_DILAYANI') return `<button class="btn btn-ghost btn-sm" onclick="showBookingDetail('${b.id}')">Pantau Tindakan</button>`;
+      return `<button class="btn btn-ghost btn-sm" onclick="showBookingDetail('${b.id}')">Detail</button>`;
+    }
+    function checkInBooking(id) { const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b||currentRole!=='admin') return; if(b.payment.status!=='PAID') return showToast('danger','Check-in ditolak','Pembayaran harus divalidasi terlebih dahulu.'); b.status='CHECK_IN'; b.checkedInAt=new Date().toISOString(); const prefix=b.department==='groomer'?'G':'D'; const count=data.bookings.filter(x=>x.queueNumber&&x.queueNumber.startsWith(prefix)).length+1; b.queueNumber=`${prefix}-${String(count).padStart(3,'0')}`; saveAppData(data); refreshDataViews(); showToast('success','Check-in berhasil',`Nomor antrean ${b.queueNumber} dibuat.`); }
+    function openRoutingModal(id, forcedRole='') {
+      const b=getAppData().bookings.find(x=>x.id===id); if(!b||currentRole!=='admin') return; const defaultRole=forcedRole||(b.department==='groomer'?'groomer':'doctor');
+      document.getElementById('modalTitle').textContent='Arahkan Pasien ke Petugas'; document.getElementById('modalBody').innerHTML=`<form onsubmit="routeBooking(event,'${b.id}')"><div class="payment-summary-card"><div class="summary-line"><span>Pasien</span><strong>${escapeHtml(b.petName)}</strong></div><div class="summary-line"><span>Layanan</span><strong>${escapeHtml(b.service)}</strong></div><div class="summary-line"><span>Antrean</span><strong>${escapeHtml(b.queueNumber)}</strong></div></div><div class="grid grid-2" style="margin-top:16px"><div class="field"><label>Bagian tujuan</label><select id="routeRole" onchange="updateRouteStaffOptions()"><option value="doctor" ${defaultRole==='doctor'?'selected':''}>Dokter Hewan</option><option value="groomer" ${defaultRole==='groomer'?'selected':''}>Groomer</option></select></div><div class="field"><label>Petugas</label><select id="routeStaff"></select></div></div><div style="display:flex;justify-content:flex-end;gap:10px"><button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button><button class="btn btn-primary">Simpan Pengarahan</button></div></form>`; document.getElementById('modalBackdrop').classList.remove('hidden'); updateRouteStaffOptions();
+    }
+    function updateRouteStaffOptions() { const role=document.getElementById('routeRole')?.value; const s=document.getElementById('routeStaff'); if(!s) return; s.innerHTML=(role==='doctor'?['drh. Dimas','drh. Rani']:['Sari - Rabbit Groomer','Ayu - Pet Care']).map(x=>`<option>${x}</option>`).join(''); }
+    function routeBooking(event,id) { event.preventDefault(); const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b||currentRole!=='admin') return; b.assignedRole=document.getElementById('routeRole').value; b.assignedStaff=document.getElementById('routeStaff').value; b.status=b.assignedRole==='doctor'?'DIARAHKAN_DOKTER':'DIARAHKAN_GROOMER'; b.routedAt=new Date().toISOString(); b.routedBy=currentUser.name; saveAppData(data); closeModal(); refreshDataViews(); showToast('success','Pasien diarahkan',`${b.petName} diarahkan ke ${b.assignedStaff}.`); }
+    function startService(id) { const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b) return; if(!['admin','doctor','groomer'].includes(currentRole)) return; if(currentRole==='doctor'&&b.assignedRole!=='doctor') return; if(currentRole==='groomer'&&b.assignedRole!=='groomer') return; b.status='SEDANG_DILAYANI'; saveAppData(data); refreshDataViews(); showToast('success','Tindakan dimulai',`${b.service} untuk ${b.petName} sedang dilaksanakan.`); }
+    function completeService(id) { const data=getAppData(); const b=data.bookings.find(x=>x.id===id); if(!b) return; b.status='SELESAI'; saveAppData(data); refreshDataViews(); showToast('success','Layanan selesai','Status booking diperbarui menjadi Selesai.'); }
+    function showBookingDetail(id) { const b=getAppData().bookings.find(x=>x.id===id); if(!b)return; const si=statusInfo(b.status); document.getElementById('modalTitle').textContent='Detail Booking'; document.getElementById('modalBody').innerHTML=`<div class="payment-summary-card"><div class="summary-line"><span>Kode</span><strong>${escapeHtml(b.code)}</strong></div><div class="summary-line"><span>Customer</span><strong>${escapeHtml(b.ownerName)}</strong></div><div class="summary-line"><span>Kelinci</span><strong>${escapeHtml(b.petName)}</strong></div><div class="summary-line"><span>Layanan</span><strong>${escapeHtml(b.service)}</strong></div><div class="summary-line"><span>Jadwal</span><strong>${formatDate(b.date)} • ${b.slot}</strong></div><div class="summary-line"><span>Status</span>${badge(si[0],si[1])}</div><div class="summary-line"><span>Petugas</span><strong>${escapeHtml(b.assignedStaff||'Belum diarahkan')}</strong></div>${b.medicalRecord?`<div class="summary-line"><span>Diagnosis</span><strong>${escapeHtml(b.medicalRecord.diagnosis||'-')}</strong></div>`:''}${b.groomingRecord?`<div class="summary-line"><span>Hasil grooming</span><strong>${escapeHtml(b.groomingRecord.result||'-')}</strong></div>`:''}${b.referral?`<div class="summary-line"><span>Rujukan</span><strong>${escapeHtml(b.referral.reason||'Perlu pemeriksaan dokter')}</strong></div>`:''}</div><button class="btn btn-primary btn-block" style="margin-top:16px" onclick="closeModal()">Tutup</button>`; document.getElementById('modalBackdrop').classList.remove('hidden'); }
+
+    function renderAdminDashboard() {
+      const body=document.getElementById('adminDashboardBookingBody'); if(!body) return; const bookings=getAppData().bookings.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+      setText('adminStatBookings',bookings.length); setText('adminStatValidation',bookings.filter(b=>b.payment.status==='SUBMITTED').length); setText('adminStatQueue',bookings.filter(b=>['CHECK_IN','DIARAHKAN_DOKTER','DIARAHKAN_GROOMER'].includes(b.status)).length); setText('adminStatService',bookings.filter(b=>b.status==='SEDANG_DILAYANI').length);
+      const latest=bookings.slice(0,5); body.innerHTML=latest.map(b=>{const pi=paymentInfo(b.payment.status),si=statusInfo(b.status);return `<tr><td><span class="booking-code">${escapeHtml(b.code)}</span></td><td><strong>${escapeHtml(b.ownerName)}</strong><br><small>${escapeHtml(b.petName)}</small></td><td>${escapeHtml(b.service)}<br><small>${formatDate(b.date)} • ${b.slot}</small></td><td>${badge(pi[0],pi[1])}</td><td>${badge(si[0],si[1])}</td><td>${adminActionHtml(b)}</td></tr>`;}).join('');
+      document.getElementById('adminDashboardEmpty')?.classList.toggle('hidden',latest.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',latest.length===0);
+      const queues=bookings.filter(b=>['CHECK_IN','DIARAHKAN_DOKTER','DIARAHKAN_GROOMER','SEDANG_DILAYANI'].includes(b.status)); const q=document.getElementById('adminQueueList'); const qe=document.getElementById('adminQueueEmpty'); if(q) q.innerHTML=queues.map(b=>`<div class="booking-item"><div class="date-box"><strong>${escapeHtml(b.queueNumber||'-')}</strong><span>${b.assignedRole==='groomer'?'Care':'Dokter'}</span></div><div class="item-main"><strong>${escapeHtml(b.petName)}</strong><small>${escapeHtml(b.assignedStaff||'Menunggu pengarahan')} • ${statusInfo(b.status)[0]}</small></div></div>`).join(''); if(qe) qe.classList.toggle('hidden',queues.length>0); if(q) q.classList.toggle('hidden',queues.length===0);
+    }
+    function renderAdminPatients() {
+      const body=document.getElementById('adminPatientBody'); const empty=document.getElementById('adminPatientEmpty'); if(!body||!empty) return; const term=(document.getElementById('adminPatientSearch')?.value||'').toLowerCase(); const pets=getAppData().pets.filter(p=>[p.id,p.name,p.ownerName,p.ownerPhone,p.breed].join(' ').toLowerCase().includes(term));
+      body.innerHTML=pets.map(p=>`<tr><td>${escapeHtml(p.id)}</td><td><strong>${escapeHtml(p.name)}</strong></td><td>${escapeHtml(p.ownerName)}<br><small>${escapeHtml(p.ownerPhone||p.ownerEmail)}</small></td><td>${escapeHtml(p.breed)}</td><td>${escapeHtml(p.weight)} kg</td><td><span class="status success">Aktif</span></td></tr>`).join(''); empty.classList.toggle('hidden',pets.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',pets.length===0);
+    }
+    function renderStaffQueues() {
+      renderDoctorDashboard();
+      renderGroomerDashboard();
+    }
+
+    function petById(id, data=getAppData()) { return data.pets.find(p=>p.id===id); }
+
+    function renderDoctorDashboard() {
+      const body=document.getElementById('doctorQueueBody'); if(!body) return;
+      const data=getAppData();
+      const assigned=data.bookings.filter(b=>b.assignedRole==='doctor');
+      const active=assigned.filter(b=>['DIARAHKAN_DOKTER','SEDANG_DILAYANI'].includes(b.status));
+      const completed=assigned.filter(b=>b.status==='SELESAI'&&b.medicalRecord);
+      setText('doctorStatAssigned',assigned.length);
+      setText('doctorStatWaiting',active.filter(b=>b.status==='DIARAHKAN_DOKTER').length);
+      setText('doctorStatInService',active.filter(b=>b.status==='SEDANG_DILAYANI').length);
+      setText('doctorStatCompleted',completed.length);
+      setText('doctorScopeLabel',`Login: ${currentRole==='doctor'?currentUser.name:'Dokter'}`);
+      body.innerHTML=active.map(b=>{
+        const p=petById(b.petId,data); const si=statusInfo(b.status);
+        return `<tr><td><strong>${escapeHtml(b.queueNumber||'-')}</strong></td><td><strong>${escapeHtml(b.petName)}</strong><br><small>${escapeHtml(p?.breed||b.petId)}</small></td><td><strong>${escapeHtml(b.service)}</strong><br><small>${escapeHtml(b.note||'Tidak ada keluhan tambahan')}</small></td><td>${formatDate(b.date)}<br><small>${escapeHtml(b.slot)}</small></td><td>${escapeHtml(b.assignedStaff||'Belum ditentukan')}</td><td>${badge(si[0],si[1])}</td><td><button class="btn btn-primary btn-sm" onclick="openDoctorExam('${b.id}')">${b.status==='SEDANG_DILAYANI'?'Lanjutkan':'Periksa'}</button></td></tr>`;
+      }).join('');
+      const empty=document.getElementById('doctorQueueEmpty'); if(empty) empty.classList.toggle('hidden',active.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',active.length===0);
+      const doneBody=document.getElementById('doctorCompletedBody'); const doneEmpty=document.getElementById('doctorCompletedEmpty');
+      if(doneBody){ doneBody.innerHTML=completed.slice().sort((a,b)=>(b.completedAt||'').localeCompare(a.completedAt||'')).map(b=>`<tr><td>${escapeHtml(b.code)}</td><td><strong>${escapeHtml(b.petName)}</strong><br><small>${escapeHtml(b.ownerName)}</small></td><td>${escapeHtml(b.medicalRecord?.diagnosis||'-')}</td><td>${escapeHtml(b.medicalRecord?.action||'-')}</td><td>${b.medicalRecord?.followUpDate?formatDate(b.medicalRecord.followUpDate):'-'}</td><td>${escapeHtml(b.completedBy||b.assignedStaff||'-')}</td></tr>`).join(''); doneBody.closest('.table-wrap')?.classList.toggle('hidden',completed.length===0); }
+      if(doneEmpty) doneEmpty.classList.toggle('hidden',completed.length>0);
+    }
+
+    function openDoctorExam(id) {
+      if(currentRole!=='doctor') return showToast('danger','Akses ditolak','Form pemeriksaan hanya dapat dibuka oleh dokter.');
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===id&&x.assignedRole==='doctor');
+      if(!b) return showToast('danger','Pasien tidak ditemukan','Booking belum diarahkan ke bagian dokter.');
+      activeServiceBookingId=id;
+      if(b.status==='DIARAHKAN_DOKTER'){ b.status='SEDANG_DILAYANI'; b.startedAt=new Date().toISOString(); b.startedBy=currentUser.name; saveAppData(data); }
+      navigate('doctor-exam'); populateDoctorExam();
+    }
+
+    function populateDoctorExam() {
+      if(currentRole!=='doctor') return;
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId); if(!b) return;
+      const p=petById(b.petId,data); const r=b.medicalRecord||{};
+      setText('doctorExamQueue',`Antrean ${b.queueNumber||'-'}`); setText('doctorExamPetName',b.petName); setText('doctorExamPetMeta',`${b.petId} • ${p?.breed||'-'} • ${p?.weight||'-'} kg`);
+      setText('doctorExamOwner',b.ownerName); setText('doctorExamService',b.service); setText('doctorExamSchedule',`${formatDate(b.date)} • ${b.slot}`); setText('doctorExamComplaint',b.note||'Tidak ada keluhan tambahan');
+      const values={doctorAnamnesis:r.anamnesis||'',doctorPhysicalExam:r.physicalExam||'',doctorDiagnosis:r.diagnosis||'',doctorAction:r.action||'',doctorPrescription:r.prescription||'',doctorFollowUp:r.followUpDate||''};
+      Object.entries(values).forEach(([id,v])=>{const el=document.getElementById(id); if(el) el.value=v;});
+    }
+
+    function collectDoctorRecord() {
+      return {anamnesis:document.getElementById('doctorAnamnesis')?.value.trim()||'',physicalExam:document.getElementById('doctorPhysicalExam')?.value.trim()||'',diagnosis:document.getElementById('doctorDiagnosis')?.value.trim()||'',action:document.getElementById('doctorAction')?.value.trim()||'',prescription:document.getElementById('doctorPrescription')?.value.trim()||'',followUpDate:document.getElementById('doctorFollowUp')?.value||'',doctor:currentUser.name,updatedAt:new Date().toISOString()};
+    }
+
+    function saveDoctorDraft() {
+      if(!activeServiceBookingId) return showToast('warning','Belum ada pasien','Pilih pasien dari dashboard dokter.');
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId); if(!b) return; b.medicalRecord=collectDoctorRecord(); saveAppData(data); refreshDataViews(); showToast('info','Draft tersimpan','Draft pemeriksaan tersimpan dan status tetap sedang dilayani.');
+    }
+
+    function saveDoctorExam(event) {
+      event.preventDefault(); if(!activeServiceBookingId) return showToast('warning','Belum ada pasien','Pilih pasien dari dashboard dokter.');
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId&&x.assignedRole==='doctor'); if(!b) return;
+      const record=collectDoctorRecord(); if(!record.diagnosis||!record.action) return showToast('danger','Data belum lengkap','Diagnosis dan tindakan wajib diisi.');
+      b.medicalRecord=record; b.status='SELESAI'; b.completedAt=new Date().toISOString(); b.completedBy=currentUser.name; b.completedRole='doctor';
+      if(record.followUpDate) b.reminder={type:'Kontrol Dokter',dueDate:record.followUpDate,status:'SCHEDULED'};
+      saveAppData(data); activeServiceBookingId=null; refreshDataViews(); showToast('success','Pemeriksaan selesai','Rekam medis tersimpan dan portal admin serta manajer telah diperbarui.'); setTimeout(()=>navigate('doctor-dashboard'),500);
+    }
+
+    function showActivePatientHistory() {
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId); if(!b) return showToast('warning','Belum ada pasien','Pilih pasien terlebih dahulu.');
+      const history=data.bookings.filter(x=>x.petId===b.petId&&x.status==='SELESAI').sort((a,c)=>(c.completedAt||'').localeCompare(a.completedAt||''));
+      document.getElementById('modalTitle').textContent=`Riwayat ${b.petName}`;
+      document.getElementById('modalBody').innerHTML=history.length?history.map(x=>`<div class="route-card"><div><strong>${escapeHtml(x.service)}</strong><br><small>${formatDate(x.date)} • ${escapeHtml(x.completedBy||'-')}</small></div><span class="status success">Selesai</span></div>`).join(''):`<div class="empty-state"><div><strong>Belum ada riwayat selesai</strong><p>Riwayat layanan pasien belum tersedia.</p></div></div>`;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    function renderGroomerDashboard() {
+      const body=document.getElementById('groomerQueueBody'); if(!body) return;
+      const data=getAppData(); const assigned=data.bookings.filter(b=>b.assignedRole==='groomer');
+      const active=assigned.filter(b=>['DIARAHKAN_GROOMER','SEDANG_DILAYANI'].includes(b.status));
+      const completed=assigned.filter(b=>b.status==='SELESAI'&&b.groomingRecord);
+      const referrals=data.bookings.filter(b=>b.status==='PERLU_RUJUKAN');
+      setText('groomerStatAssigned',assigned.length); setText('groomerStatWaiting',active.filter(b=>b.status==='DIARAHKAN_GROOMER').length); setText('groomerStatInService',active.filter(b=>b.status==='SEDANG_DILAYANI').length); setText('groomerStatReferral',referrals.length); setText('groomerScopeLabel',`Login: ${currentRole==='groomer'?currentUser.name:'Groomer'}`);
+      body.innerHTML=active.map(b=>{const p=petById(b.petId,data); const si=statusInfo(b.status); return `<tr><td><strong>${escapeHtml(b.queueNumber||'-')}</strong></td><td><strong>${escapeHtml(b.petName)}</strong><br><small>${escapeHtml(p?.breed||b.petId)} • ${escapeHtml(p?.weight||'-')} kg</small></td><td>${escapeHtml(b.service)}<br><small>${escapeHtml(b.note||'Tidak ada catatan')}</small></td><td>${formatDate(b.date)}<br><small>${escapeHtml(b.slot)}</small></td><td>${escapeHtml(b.assignedStaff||'Belum ditentukan')}</td><td>${badge(si[0],si[1])}</td><td><button class="btn btn-primary btn-sm" onclick="openGroomingForm('${b.id}')">${b.status==='SEDANG_DILAYANI'?'Lanjutkan':'Pre-check'}</button></td></tr>`;}).join('');
+      const empty=document.getElementById('groomerQueueEmpty'); if(empty) empty.classList.toggle('hidden',active.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',active.length===0);
+      const doneBody=document.getElementById('groomerCompletedBody'); const doneEmpty=document.getElementById('groomerCompletedEmpty');
+      if(doneBody){doneBody.innerHTML=completed.slice().sort((a,b)=>(b.completedAt||'').localeCompare(a.completedAt||'')).map(b=>`<tr><td>${escapeHtml(b.code)}</td><td><strong>${escapeHtml(b.petName)}</strong><br><small>${escapeHtml(b.ownerName)}</small></td><td>${escapeHtml(b.groomingRecord?.result||'-')}</td><td>${escapeHtml(b.groomingRecord?.finding||'Tidak ada')}</td><td>${b.groomingRecord?.nextDate?formatDate(b.groomingRecord.nextDate):'-'}</td><td>${escapeHtml(b.completedBy||b.assignedStaff||'-')}</td></tr>`).join(''); doneBody.closest('.table-wrap')?.classList.toggle('hidden',completed.length===0);}
+      if(doneEmpty) doneEmpty.classList.toggle('hidden',completed.length>0);
+    }
+
+    function openGroomingForm(id) {
+      if(currentRole!=='groomer') return showToast('danger','Akses ditolak','Form grooming hanya dapat dibuka oleh groomer.');
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===id&&x.assignedRole==='groomer'); if(!b) return showToast('danger','Pasien tidak ditemukan','Booking belum diarahkan ke groomer.');
+      activeServiceBookingId=id; if(b.status==='DIARAHKAN_GROOMER'){b.status='SEDANG_DILAYANI'; b.startedAt=new Date().toISOString(); b.startedBy=currentUser.name; saveAppData(data);} navigate('grooming-form'); populateGroomingForm();
+    }
+
+    function populateGroomingForm() {
+      if(currentRole!=='groomer') return; const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId); if(!b) return; const p=petById(b.petId,data); const r=b.groomingRecord||{};
+      setText('groomingFormQueue',`Antrean ${b.queueNumber||'-'}`); setText('groomingPetName',b.petName); setText('groomingPetMeta',`${b.petId} • ${p?.breed||'-'} • ${p?.weight||'-'} kg`); setText('groomingOwner',b.ownerName); setText('groomingBookingCode',b.code); setText('groomingService',b.service); setText('groomingSchedule',`${formatDate(b.date)} • ${b.slot}`);
+      const vals={groomingInitialCondition:r.initialCondition||'',groomingResult:r.result||'',groomingFinding:r.finding||'',groomingNextDate:r.nextDate||''}; Object.entries(vals).forEach(([id,v])=>{const el=document.getElementById(id); if(el) el.value=v;});
+      const safe=document.querySelector(`input[name="groomingSafe"][value="${r.safety||'AMAN'}"]`); if(safe) safe.checked=true; const ref=document.getElementById('groomingReferral'); if(ref) ref.value=r.referral||'TIDAK';
+    }
+
+    function collectGroomingRecord() {
+      return {initialCondition:document.getElementById('groomingInitialCondition')?.value.trim()||'',safety:document.querySelector('input[name="groomingSafe"]:checked')?.value||'AMAN',result:document.getElementById('groomingResult')?.value.trim()||'',finding:document.getElementById('groomingFinding')?.value.trim()||'',referral:document.getElementById('groomingReferral')?.value||'TIDAK',nextDate:document.getElementById('groomingNextDate')?.value||'',groomer:currentUser.name,updatedAt:new Date().toISOString()};
+    }
+
+    function saveGroomingResult(event) {
+      event.preventDefault(); if(!activeServiceBookingId) return showToast('warning','Belum ada pasien','Pilih pasien dari dashboard groomer.'); const record=collectGroomingRecord();
+      if(record.safety==='TIDAK_AMAN'||record.referral==='YA') return stopGroomingIntegrated();
+      if(!record.initialCondition||!record.result) return showToast('danger','Data belum lengkap','Kondisi awal dan hasil grooming wajib diisi.');
+      const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId&&x.assignedRole==='groomer'); if(!b) return; b.groomingRecord=record; b.status='SELESAI'; b.completedAt=new Date().toISOString(); b.completedBy=currentUser.name; b.completedRole='groomer'; if(record.nextDate) b.reminder={type:'Grooming Berikutnya',dueDate:record.nextDate,status:'SCHEDULED'}; saveAppData(data); activeServiceBookingId=null; refreshDataViews(); showToast('success','Grooming selesai','Hasil tersimpan dan portal admin serta manajer telah diperbarui.'); setTimeout(()=>navigate('groomer-dashboard'),500);
+    }
+
+    function stopGroomingIntegrated() {
+      if(!activeServiceBookingId) return showToast('warning','Belum ada pasien','Pilih pasien dari dashboard groomer.'); const data=getAppData(); const b=data.bookings.find(x=>x.id===activeServiceBookingId&&x.assignedRole==='groomer'); if(!b) return;
+      const record=collectGroomingRecord(); if(!record.initialCondition) return showToast('danger','Kondisi awal belum diisi','Isi hasil pre-check sebelum menghentikan layanan.'); record.safety='TIDAK_AMAN'; record.referral='YA'; b.groomingRecord=record; b.referral={from:'groomer',createdBy:currentUser.name,reason:record.finding||'Kondisi tidak aman untuk grooming',createdAt:new Date().toISOString()}; b.status='PERLU_RUJUKAN'; b.assignedRole=''; b.assignedStaff=''; saveAppData(data); activeServiceBookingId=null; refreshDataViews(); showToast('danger','Rujukan dikirim ke admin','Admin dapat mengarahkan pasien ke dokter dari halaman booking.'); setTimeout(()=>navigate('groomer-dashboard'),500);
+    }
+
+    function renderManagerDashboard() {
+      const body=document.getElementById('managerRecentBody'); if(!body) return; const data=getAppData(); const bookings=data.bookings.slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)); const completed=bookings.filter(b=>b.status==='SELESAI'); const paid=bookings.filter(b=>b.payment.status==='PAID'); const rate=bookings.length?Math.round(completed.length/bookings.length*100):0;
+      setText('managerStatPatients',data.pets.length); setText('managerStatBookings',bookings.length); setText('managerStatCompletion',`${rate}%`); setText('managerStatCompletionNote',`${completed.length} layanan selesai`); setText('managerStatRevenue',money(paid.reduce((s,b)=>s+b.price,0)));
+      setText('managerFlowValidation',bookings.filter(b=>b.payment.status==='SUBMITTED').length); setText('managerFlowQueue',bookings.filter(b=>['CHECK_IN','DIARAHKAN_DOKTER','DIARAHKAN_GROOMER'].includes(b.status)).length); setText('managerFlowService',bookings.filter(b=>b.status==='SEDANG_DILAYANI').length); setText('managerFlowReferral',bookings.filter(b=>b.status==='PERLU_RUJUKAN').length);
+      setText('managerPayUnpaid',bookings.filter(b=>b.payment.status==='UNPAID').length); setText('managerPaySubmitted',bookings.filter(b=>b.payment.status==='SUBMITTED').length); setText('managerPayPaid',paid.length); setText('managerPayRejected',bookings.filter(b=>b.payment.status==='REJECTED').length);
+      setText('managerDoctorAssignments',bookings.filter(b=>b.assignedRole==='doctor').length); setText('managerGroomerAssignments',bookings.filter(b=>b.assignedRole==='groomer').length); setText('managerDoctorCompleted',completed.filter(b=>b.completedRole==='doctor').length); setText('managerGroomerCompleted',completed.filter(b=>b.completedRole==='groomer').length);
+      const counts={}; bookings.forEach(b=>counts[b.service]=(counts[b.service]||0)+1); const popular=document.getElementById('managerPopularServices'); if(popular){const total=bookings.length||1; const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4); popular.innerHTML=rows.length?rows.map(([name,count])=>{const pct=Math.round(count/total*100);return `<div><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span>${escapeHtml(name)}</span><strong>${pct}%</strong></div><div class="progress"><span style="width:${pct}%"></span></div></div>`;}).join(''):'<p style="color:var(--muted);margin:0">Belum ada data layanan.</p>';}
+      const recent=bookings.slice(0,8); body.innerHTML=recent.map(b=>{const pi=paymentInfo(b.payment.status),si=statusInfo(b.status); return `<tr><td>${escapeHtml(b.code)}</td><td><strong>${escapeHtml(b.ownerName)}</strong><br><small>${escapeHtml(b.petName)}</small></td><td>${escapeHtml(b.service)}<br><small>${formatDate(b.date)} • ${escapeHtml(b.slot)}</small></td><td>${badge(pi[0],pi[1])}</td><td>${escapeHtml(b.assignedStaff||'Belum diarahkan')}</td><td>${badge(si[0],si[1])}</td></tr>`;}).join(''); const empty=document.getElementById('managerRecentEmpty'); if(empty) empty.classList.toggle('hidden',recent.length>0); body.closest('.table-wrap')?.classList.toggle('hidden',recent.length===0);
+    }
+
+    function checkIn(button) { button.textContent='Sudah Check-in'; button.disabled=true; showToast('success','Check-in berhasil','Gunakan booking dinamis untuk alur lengkap.'); }
+    function payInvoice(button) { showToast('info','Pembayaran','Gunakan tombol Bayar pada tagihan booking dinamis.'); }
+    function finishExam() { saveDoctorExam(new Event('submit')); }
+    function finishGrooming() { document.getElementById('groomingServiceForm')?.requestSubmit(); }
+    function stopGrooming() { stopGroomingIntegrated(); }
+    function openSettings() { document.getElementById('modalTitle').textContent='Pengaturan Akun'; document.getElementById('modalBody').innerHTML=`<div class="field"><label>Kanal notifikasi utama</label><select><option>WhatsApp</option><option>Email</option><option>Push Notification</option></select></div><div class="field"><label class="checkbox"><input type="checkbox" checked> Reminder kontrol, vaksinasi, dan grooming</label></div><button class="btn btn-primary btn-block" onclick="closeModal();showToast('success','Pengaturan tersimpan','Preferensi berhasil diperbarui.')">Simpan Pengaturan</button>`; document.getElementById('modalBackdrop').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('modalBackdrop').classList.add('hidden'); }
+
+    (function initPrototype() { const date=document.getElementById('bookingDate'); if(date){ const d=new Date(); d.setDate(d.getDate()+1); date.min=new Date().toISOString().slice(0,10); date.value=d.toISOString().slice(0,10); } updateBookingSummary(); })();
+  </script>
+</body>
+</html>
