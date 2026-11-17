@@ -1,0 +1,46 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Activity - Registrasi Pemilik dan Profil Kelinci
+start
+:Pengguna memilih Portal Pemilik;
+if (Sudah memiliki akun?) then (Ya)
+  :Masukkan email dan kata sandi;
+  :Sistem membaca rabbitcareOwners;
+  if (Kata sandi sesuai?) then (Ya)
+    :Buat sesi sebagai owner;
+  else (Tidak)
+    :Tampilkan login gagal;
+    stop
+  endif
+else (Belum)
+  :Pilih Daftar;
+  :Isi nama, telepon, email, dan kata sandi;
+  if (Email sudah terdaftar?) then (Ya)
+    :Tampilkan email sudah terdaftar;
+    stop
+  else (Tidak)
+    :Simpan akun ke localStorage rabbitcareOwners;
+    :Buat sesi sebagai owner;
+  endif
+endif
+:Masuk Dashboard Pemilik;
+if (Tambah profil kelinci?) then (Ya)
+  :Isi nama, ras, jenis kelamin,
+tanggal lahir, warna, berat, status steril;
+  :Buat pet ID unik;
+  :Hubungkan pet dengan ownerEmail;
+  :Simpan ke rabbitcarePrototypeDataV3.pets;
+  :Tampilkan pada Profil Kelinci,
+booking, riwayat, kalender, dan admin;
+else (Tidak)
+  :Lanjut menggunakan dashboard;
+endif
+stop
+@enduml

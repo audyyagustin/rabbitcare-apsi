@@ -1,0 +1,74 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor White
+  BorderColor #48664C
+}
+
+title Use Case - Portal Pemilik RabbitCare
+
+actor "Pemilik / Customer" as Owner
+rectangle "Portal Pemilik" {
+  usecase "Daftar Akun" as Register
+  usecase "Login" as Login
+  usecase "Logout" as Logout
+  usecase "Tambah Profil Kelinci" as AddPet
+  usecase "Ubah Profil Kelinci" as EditPet
+  usecase "Lihat Daftar Kelinci" as ViewPets
+  usecase "Pilih Kelinci" as SelectPet
+  usecase "Pilih Layanan, Tanggal,
+dan Slot" as SelectService
+  usecase "Buat Booking" as CreateBooking
+  usecase "Cek Benturan Slot" as SlotCheck
+  usecase "Pilih Transfer Bank" as Bank
+  usecase "Pilih QRIS" as QRIS
+  usecase "Pilih E-wallet
+DANA / GoPay / OVO" as Wallet
+  usecase "Isi Nama Pengirim" as Payer
+  usecase "Kirim Pengajuan Pembayaran" as SubmitPay
+  usecase "Lihat Status Booking
+dan Pembayaran" as Status
+  usecase "Lihat Kalender" as Calendar
+  usecase "Lihat Riwayat Medis,
+Vaksinasi, dan Grooming" as History
+  usecase "Lihat Reminder Kontrol
+dan Grooming" as Reminder
+}
+
+Owner -- Register
+Owner -- Login
+Owner -- Logout
+Owner -- AddPet
+Owner -- EditPet
+Owner -- ViewPets
+Owner -- CreateBooking
+Owner -- Bank
+Owner -- QRIS
+Owner -- Wallet
+Owner -- Status
+Owner -- Calendar
+Owner -- History
+Owner -- Reminder
+
+AddPet .> ViewPets : <<include>>
+EditPet .> ViewPets : <<include>>
+CreateBooking .> SelectPet : <<include>>
+CreateBooking .> SelectService : <<include>>
+CreateBooking .> SlotCheck : <<include>>
+Bank .> Payer : <<include>>
+QRIS .> Payer : <<include>>
+Wallet .> Payer : <<include>>
+SubmitPay .> Payer : <<include>>
+Bank .> SubmitPay : <<include>>
+QRIS .> SubmitPay : <<include>>
+Wallet .> SubmitPay : <<include>>
+@enduml

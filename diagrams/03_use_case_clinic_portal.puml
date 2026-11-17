@@ -1,0 +1,84 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor White
+  BorderColor #48664C
+}
+
+title Use Case - Portal Klinik RabbitCare
+
+actor "Admin Klinik" as Admin
+actor "Dokter Hewan" as Doctor
+actor "Groomer / Pet Care" as Groomer
+actor "Manajer Klinik" as Manager
+
+rectangle "Portal Klinik" {
+  usecase "Login Sesuai Peran" as Login
+  usecase "Lihat Booking Customer" as ViewBooking
+  usecase "Validasi / Tolak Pembayaran" as ValidatePay
+  usecase "Check-in Pasien" as CheckIn
+  usecase "Buat Nomor Antrean" as Queue
+  usecase "Arahkan ke Dokter
+atau Groomer" as Route
+  usecase "Pantau Status Tindakan" as Monitor
+  usecase "Lihat Data Pasien" as Patients
+  usecase "Isi Anamnesis dan
+Pemeriksaan Fisik" as Exam
+  usecase "Isi Diagnosis, Tindakan,
+Resep, dan Kontrol" as Medical
+  usecase "Simpan Draft Pemeriksaan" as Draft
+  usecase "Pre-check Keamanan Grooming" as Precheck
+  usecase "Simpan Hasil dan Temuan" as GroomResult
+  usecase "Hentikan Grooming dan
+Buat Rujukan Dokter" as Referral
+  usecase "Lihat Statistik Pasien, Booking,
+Pendapatan, dan Penyelesaian" as Report
+  usecase "Lihat Kalender Sesuai Peran" as Calendar
+  usecase "Lihat Riwayat Sesuai Akses" as History
+}
+
+Admin -- Login
+Admin -- ViewBooking
+Admin -- ValidatePay
+Admin -- CheckIn
+Admin -- Route
+Admin -- Monitor
+Admin -- Patients
+Admin -- Calendar
+
+Doctor -- Login
+Doctor -- Exam
+Doctor -- Medical
+Doctor -- Draft
+Doctor -- Calendar
+Doctor -- History
+
+Groomer -- Login
+Groomer -- Precheck
+Groomer -- GroomResult
+Groomer -- Referral
+Groomer -- Calendar
+Groomer -- History
+
+Manager -- Login
+Manager -- Report
+Manager -- Calendar
+Manager -- History
+
+CheckIn .> ValidatePay : <<include>>
+CheckIn .> Queue : <<include>>
+Route .> CheckIn : <<include>>
+Medical .> Exam : <<include>>
+GroomResult .> Precheck : <<include>>
+Referral .> Precheck : <<extend>>
+[jika tidak aman]
+@enduml

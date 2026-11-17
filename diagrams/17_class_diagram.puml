@@ -1,0 +1,213 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+skinparam classAttributeIconSize 0
+hide circle
+
+title Class / Data Model - Prototype HTML RabbitCare
+
+class OwnerAccount {
+  +name: String
+  +email: String
+  +phone: String
+  +password: String
+}
+
+class StaffSession {
+  +name: String
+  +email: String
+  +role: StaffRole
+}
+
+class Pet {
+  +id: String
+  +ownerEmail: String
+  +ownerName: String
+  +ownerPhone: String
+  +name: String
+  +breed: String
+  +gender: String
+  +birthDate: Date
+  +color: String
+  +weight: Decimal
+  +sterilized: String
+  +createdAt: DateTime
+}
+
+class Booking {
+  +id: String
+  +code: String
+  +invoiceId: String
+  +ownerEmail: String
+  +ownerName: String
+  +ownerPhone: String
+  +petId: String
+  +petName: String
+  +service: String
+  +price: Decimal
+  +department: Department
+  +date: Date
+  +slot: String
+  +note: Text
+  +status: BookingStatus
+  +assignedRole: String
+  +assignedStaff: String
+  +queueNumber: String
+  +checkedInAt: DateTime
+  +createdAt: DateTime
+  +startedAt: DateTime
+  +completedAt: DateTime
+  +completedBy: String
+  +completedRole: String
+}
+
+class Payment {
+  +status: PaymentStatus
+  +method: String
+  +channel: String
+  +destination: String
+  +payerName: String
+  +submittedAt: DateTime
+  +validatedAt: DateTime
+  +validatedBy: String
+}
+
+class MedicalRecord {
+  +anamnesis: Text
+  +physicalExam: Text
+  +diagnosis: Text
+  +action: Text
+  +prescription: Text
+  +followUpDate: Date
+  +doctor: String
+  +updatedAt: DateTime
+}
+
+class GroomingRecord {
+  +initialCondition: Text
+  +safety: GroomingSafety
+  +result: Text
+  +finding: Text
+  +referral: String
+  +nextDate: Date
+  +groomer: String
+  +updatedAt: DateTime
+}
+
+class Referral {
+  +from: String
+  +createdBy: String
+  +reason: Text
+  +createdAt: DateTime
+}
+
+class Reminder {
+  +type: String
+  +dueDate: Date
+  +status: ReminderStatus
+}
+
+class PaymentDestination {
+  +method: String
+  +channel: String
+  +destination: String
+  +owner: String
+  +icon: String
+}
+
+class PrototypeStore {
+  +pets: Pet[]
+  +bookings: Booking[]
+  +load()
+  +save()
+}
+
+class OwnerStore {
+  +accountsByEmail: Map
+  +load()
+  +save()
+}
+
+enum StaffRole {
+  admin
+  doctor
+  groomer
+  manager
+}
+
+enum Department {
+  doctor
+  groomer
+}
+
+enum BookingStatus {
+  MENUNGGU_PEMBAYARAN
+  MENUNGGU_VALIDASI
+  TERKONFIRMASI
+  CHECK_IN
+  DIARAHKAN_DOKTER
+  DIARAHKAN_GROOMER
+  SEDANG_DILAYANI
+  PERLU_RUJUKAN
+  SELESAI
+  DIBATALKAN
+}
+
+enum PaymentStatus {
+  UNPAID
+  SUBMITTED
+  PAID
+  REJECTED
+}
+
+enum GroomingSafety {
+  AMAN
+  TIDAK_AMAN
+}
+
+enum ReminderStatus {
+  SCHEDULED
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+OwnerAccount "1" -- "0..*" Pet : ownerEmail
+OwnerAccount "1" -- "0..*" Booking : membuat
+Pet "1" -- "0..*" Booking : dipilih
+Booking "1" *-- "1" Payment
+Booking "1" *-- "0..1" MedicalRecord
+Booking "1" *-- "0..1" GroomingRecord
+Booking "1" *-- "0..1" Referral
+Booking "1" *-- "0..1" Reminder
+PrototypeStore "1" *-- "0..*" Pet
+PrototypeStore "1" *-- "0..*" Booking
+OwnerStore "1" *-- "0..*" OwnerAccount
+PaymentDestination .. Payment : dipilih untuk instruksi
+StaffSession --> StaffRole
+Booking --> Department
+Booking --> BookingStatus
+Payment --> PaymentStatus
+GroomingRecord --> GroomingSafety
+Reminder --> ReminderStatus
+
+note right of OwnerAccount
+Pada prototype password disimpan langsung
+di localStorage. Untuk produksi wajib hash
+password dan autentikasi server-side.
+end note
+
+note bottom of Booking
+medicalRecord, groomingRecord, referral,
+reminder, dan payment disimpan sebagai
+objek tertanam di dalam booking.
+end note
+@enduml

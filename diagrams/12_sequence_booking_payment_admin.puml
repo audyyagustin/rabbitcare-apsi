@@ -1,0 +1,51 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Sequence - Booking, Pembayaran, dan Validasi Admin
+actor Owner as "Pemilik"
+participant OwnerUI as "Portal Pemilik"
+participant BookingJS as "Booking JS"
+database Store as "localStorage App Data"
+participant PaymentJS as "Payment JS"
+actor Admin as "Admin"
+participant AdminUI as "Portal Admin"
+
+Owner -> OwnerUI : pilih kelinci, layanan, tanggal, slot
+OwnerUI -> BookingJS : confirmBooking()
+BookingJS -> Store : baca pets dan bookings
+Store --> BookingJS : data
+BookingJS -> BookingJS : cek benturan slot
+alt slot tersedia
+  BookingJS -> Store : simpan booking + invoice
+status MENUNGGU_PEMBAYARAN
+  BookingJS --> OwnerUI : tampilkan tagihan
+  Store --> AdminUI : booking tersedia saat render
+else slot penuh
+  BookingJS --> OwnerUI : Slot tidak tersedia
+end
+
+Owner -> OwnerUI : pilih bank / QRIS / e-wallet
+OwnerUI -> PaymentJS : payerName + metode
+PaymentJS -> Store : payment = SUBMITTED
+booking = MENUNGGU_VALIDASI
+PaymentJS --> OwnerUI : Menunggu validasi admin
+
+Admin -> AdminUI : buka validasi pembayaran
+AdminUI -> Store : baca booking SUBMITTED
+Store --> AdminUI : detail pembayaran
+alt valid
+  Admin -> AdminUI : Validasi
+  AdminUI -> Store : payment = PAID
+booking = TERKONFIRMASI
+else ditolak
+  Admin -> AdminUI : Tolak
+  AdminUI -> Store : payment = REJECTED
+booking = MENUNGGU_PEMBAYARAN
+end
+@enduml

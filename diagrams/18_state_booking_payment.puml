@@ -1,0 +1,43 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title State Diagram - Booking dan Pembayaran RabbitCare
+
+[*] --> MENUNGGU_PEMBAYARAN : booking dibuat
+MENUNGGU_PEMBAYARAN --> MENUNGGU_VALIDASI : customer kirim metode + nama pengirim
+MENUNGGU_VALIDASI --> TERKONFIRMASI : admin validasi / payment PAID
+MENUNGGU_VALIDASI --> MENUNGGU_PEMBAYARAN : admin tolak / payment REJECTED
+TERKONFIRMASI --> CHECK_IN : admin check-in
+CHECK_IN --> DIARAHKAN_DOKTER : admin pilih dokter
+CHECK_IN --> DIARAHKAN_GROOMER : admin pilih groomer
+DIARAHKAN_DOKTER --> SEDANG_DILAYANI : dokter buka pemeriksaan
+DIARAHKAN_GROOMER --> SEDANG_DILAYANI : groomer mulai pre-check
+SEDANG_DILAYANI --> SELESAI : dokter simpan pemeriksaan
+SEDANG_DILAYANI --> SELESAI : grooming aman dan selesai
+SEDANG_DILAYANI --> PERLU_RUJUKAN : grooming tidak aman / perlu dokter
+PERLU_RUJUKAN --> DIARAHKAN_DOKTER : admin arahkan ulang
+MENUNGGU_PEMBAYARAN --> DIBATALKAN : booking dibatalkan
+TERKONFIRMASI --> DIBATALKAN : pembatalan admin
+SELESAI --> [*]
+DIBATALKAN --> [*]
+
+state "Payment Sub-state" as P {
+  [*] --> UNPAID
+  UNPAID --> SUBMITTED : ajukan pembayaran
+  SUBMITTED --> PAID : validasi admin
+  SUBMITTED --> REJECTED : ditolak admin
+  REJECTED --> SUBMITTED : ajukan ulang
+  PAID --> [*]
+}
+
+note right of MENUNGGU_PEMBAYARAN
+Layanan belum dapat dijadwalkan/check-in
+sebelum payment berstatus PAID.
+end note
+@enduml

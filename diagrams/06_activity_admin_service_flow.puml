@@ -1,0 +1,49 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Activity - Alur Admin dari Pembayaran sampai Pengarahan
+start
+:Admin login melalui Portal Klinik;
+:Admin membuka booking customer;
+if (Payment status = SUBMITTED?) then (Ya)
+  :Periksa metode, tujuan, nama pengirim, dan total;
+  if (Pembayaran valid?) then (Ya)
+    :Payment status = PAID;
+    :Booking status = TERKONFIRMASI;
+  else (Tidak)
+    :Payment status = REJECTED;
+    :Booking status = MENUNGGU_PEMBAYARAN;
+    :Customer harus mengajukan ulang;
+    stop
+  endif
+else (Tidak)
+  :Tunggu pembayaran customer;
+  stop
+endif
+:Admin melakukan check-in;
+if (Pembayaran sudah PAID?) then (Ya)
+  :Simpan waktu check-in;
+  :Buat nomor antrean D-xxx atau G-xxx;
+  :Booking status = CHECK_IN;
+else (Tidak)
+  :Tolak check-in;
+  stop
+endif
+:Admin memilih tujuan petugas;
+if (Tujuan?) then (Dokter)
+  :Pilih dokter;
+  :Status = DIARAHKAN_DOKTER;
+else (Groomer)
+  :Pilih groomer;
+  :Status = DIARAHKAN_GROOMER;
+endif
+:Booking muncul pada dashboard petugas terkait;
+:Admin memantau sampai SEDANG_DILAYANI atau SELESAI;
+stop
+@enduml

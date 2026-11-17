@@ -1,0 +1,43 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Activity - Booking dan Pengajuan Pembayaran Customer
+start
+:Customer memilih profil kelinci;
+:Customer memilih layanan;
+:Customer memilih tanggal dan slot;
+:Sistem menentukan bagian doctor atau groomer;
+:Sistem memeriksa booking pada tanggal, slot, dan bagian yang sama;
+if (Slot tersedia?) then (Ya)
+  :Buat booking code dan invoice ID;
+  :Status booking = MENUNGGU_PEMBAYARAN;
+  :Payment status = UNPAID;
+  :Simpan booking ke localStorage;
+  :Booking otomatis terlihat di Portal Admin;
+else (Tidak)
+  :Tampilkan Slot tidak tersedia;
+  stop
+endif
+:Customer membuka Tagihan;
+:Customer memilih metode;
+if (Metode?) then (Transfer Bank)
+  :Tampilkan bank dan nomor rekening tujuan;
+elseif (QRIS)
+  :Tampilkan QR code QRIS;
+else (E-wallet)
+  :Pilih DANA / GoPay / OVO;
+  :Tampilkan nomor e-wallet tujuan;
+endif
+:Customer mengisi nama pengirim;
+:Kirim pengajuan pembayaran;
+:Payment status = SUBMITTED;
+:Booking status = MENUNGGU_VALIDASI;
+:Admin menerima pengajuan untuk divalidasi;
+stop
+@enduml

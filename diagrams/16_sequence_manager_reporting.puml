@@ -1,0 +1,27 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Sequence - Dashboard Manajer dari Data Terintegrasi
+actor Manager as "Manajer"
+participant ManagerUI as "Dashboard Manajer"
+participant ReportJS as "Reporting JS"
+database Store as "localStorage App Data"
+
+Manager -> ManagerUI : login Portal Klinik sebagai manager
+ManagerUI -> ReportJS : renderManagerDashboard()
+ReportJS -> Store : baca pets[] dan bookings[]
+Store --> ReportJS : seluruh data klinik
+ReportJS -> ReportJS : hitung jumlah pasien
+ReportJS -> ReportJS : hitung booking dan completion rate
+ReportJS -> ReportJS : jumlahkan pendapatan payment PAID
+ReportJS -> ReportJS : hitung validasi, antrean, layanan, rujukan
+ReportJS -> ReportJS : kelompokkan layanan populer
+ReportJS --> ManagerUI : statistik, progres, dan tabel aktivitas
+ManagerUI --> Manager : laporan operasional tampil
+@enduml

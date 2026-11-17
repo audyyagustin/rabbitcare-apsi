@@ -1,0 +1,40 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Sequence - Check-in dan Pengarahan Petugas
+actor Admin
+participant AdminUI as "Portal Admin"
+participant FlowJS as "Admin Flow JS"
+database Store as "localStorage App Data"
+participant DoctorUI as "Dashboard Dokter"
+participant GroomerUI as "Dashboard Groomer"
+
+Admin -> AdminUI : klik Check-in
+AdminUI -> FlowJS : checkInBooking(id)
+FlowJS -> Store : baca booking
+Store --> FlowJS : payment status
+alt payment = PAID
+  FlowJS -> FlowJS : buat nomor antrean D-xxx / G-xxx
+  FlowJS -> Store : status = CHECK_IN
+checkedInAt + queueNumber
+  FlowJS --> AdminUI : check-in berhasil
+else belum PAID
+  FlowJS --> AdminUI : check-in ditolak
+end
+
+Admin -> AdminUI : Arahkan Petugas
+AdminUI -> FlowJS : role dan nama petugas
+FlowJS -> Store : assignedRole + assignedStaff
+status DIARAHKAN_DOKTER/GROOMER
+alt diarahkan ke dokter
+  Store --> DoctorUI : pasien tampil pada antrean dokter
+else diarahkan ke groomer
+  Store --> GroomerUI : pasien tampil pada antrean groomer
+end
+@enduml

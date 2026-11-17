@@ -1,0 +1,38 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Sequence - Registrasi Pemilik dan Menambah Kelinci
+actor Owner as "Pemilik"
+participant UI as "HTML UI"
+participant Auth as "Auth JavaScript"
+database OwnerStore as "localStorage
+rabbitcareOwners"
+participant PetModule as "Pet Profile JS"
+database AppStore as "localStorage
+rabbitcarePrototypeDataV3"
+
+Owner -> UI : Pilih Portal Pemilik dan Daftar
+UI -> Auth : nama, telepon, email, password
+Auth -> OwnerStore : cek email
+OwnerStore --> Auth : akun ada / tidak
+alt email belum terdaftar
+  Auth -> OwnerStore : simpan akun owner
+  Auth --> UI : startSession(owner)
+else email sudah terdaftar
+  Auth --> UI : pesan email sudah terdaftar
+end
+
+Owner -> UI : Tambah Profil Kelinci
+UI -> PetModule : data kelinci
+PetModule -> PetModule : buat pet ID unik
+PetModule -> AppStore : append pets[] dengan ownerEmail
+AppStore --> PetModule : tersimpan
+PetModule --> UI : refresh dashboard, profil, booking
+UI --> Owner : profil kelinci tampil
+@enduml

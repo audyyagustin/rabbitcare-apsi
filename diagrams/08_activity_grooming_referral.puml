@@ -1,0 +1,44 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Activity - Grooming, Pre-check, dan Rujukan
+start
+:Groomer login Portal Klinik;
+:Groomer melihat pasien yang assignedRole = groomer;
+:Groomer membuka pasien;
+:Status = SEDANG_DILAYANI;
+:Isi kondisi awal / pre-check;
+if (Kondisi aman?) then (Ya)
+  :Lakukan grooming;
+  :Isi hasil dan temuan;
+  if (Perlu rujukan dokter?) then (Ya)
+    :Simpan groomingRecord;
+    :Buat referral;
+    :Status = PERLU_RUJUKAN;
+    :Kosongkan assignedRole dan assignedStaff;
+    :Admin mengarahkan ulang ke dokter;
+  else (Tidak)
+    :Isi jadwal grooming berikutnya jika ada;
+    :Simpan groomingRecord;
+    :Status = SELESAI;
+    :completedRole = groomer;
+    if (Ada jadwal berikutnya?) then (Ya)
+      :Buat reminder Grooming Berikutnya;
+    endif
+  endif
+else (Tidak)
+  :Hentikan layanan;
+  :Simpan alasan / temuan;
+  :Buat referral;
+  :Status = PERLU_RUJUKAN;
+  :Admin mengarahkan pasien ke dokter;
+endif
+:Riwayat, kalender, admin, dan manajer diperbarui;
+stop
+@enduml

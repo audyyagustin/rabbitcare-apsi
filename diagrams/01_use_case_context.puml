@@ -1,0 +1,97 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor White
+  BorderColor #48664C
+}
+
+title Use Case Konteks - Prototype RabbitCare Terintegrasi
+
+actor "Pemilik / Customer" as Owner
+actor "Admin Klinik" as Admin
+actor "Dokter Hewan" as Doctor
+actor "Groomer / Pet Care" as Groomer
+actor "Manajer Klinik" as Manager
+
+rectangle "RabbitCare - Single HTML Prototype" {
+  usecase "Registrasi dan Login
+Portal Pemilik" as UC_OwnerAuth
+  usecase "Login Portal Klinik
+berdasarkan Peran" as UC_StaffAuth
+  usecase "Kelola Profil Kelinci" as UC_Pet
+  usecase "Booking Layanan" as UC_Booking
+  usecase "Pilih dan Ajukan
+Pembayaran" as UC_Pay
+  usecase "Validasi Pembayaran" as UC_Validate
+  usecase "Check-in dan
+Nomor Antrean" as UC_CheckIn
+  usecase "Arahkan Pasien
+ke Petugas" as UC_Route
+  usecase "Pemeriksaan dan
+Rekam Medis" as UC_Medical
+  usecase "Pre-check, Grooming,
+dan Rujukan" as UC_Grooming
+  usecase "Lihat Kalender" as UC_Calendar
+  usecase "Lihat Riwayat
+Kesehatan" as UC_History
+  usecase "Lihat Reminder" as UC_Reminder
+  usecase "Pantau Dashboard
+dan Laporan" as UC_Report
+}
+
+Owner -- UC_OwnerAuth
+Owner -- UC_Pet
+Owner -- UC_Booking
+Owner -- UC_Pay
+Owner -- UC_Calendar
+Owner -- UC_History
+Owner -- UC_Reminder
+
+Admin -- UC_StaffAuth
+Admin -- UC_Validate
+Admin -- UC_CheckIn
+Admin -- UC_Route
+Admin -- UC_Calendar
+
+Doctor -- UC_StaffAuth
+Doctor -- UC_Medical
+Doctor -- UC_Calendar
+Doctor -- UC_History
+
+Groomer -- UC_StaffAuth
+Groomer -- UC_Grooming
+Groomer -- UC_Calendar
+Groomer -- UC_History
+
+Manager -- UC_StaffAuth
+Manager -- UC_Report
+Manager -- UC_Calendar
+Manager -- UC_History
+
+UC_Booking .> UC_Pet : <<include>>
+UC_Pay .> UC_Booking : <<include>>
+UC_CheckIn .> UC_Validate : <<include>>
+UC_Route .> UC_CheckIn : <<include>>
+UC_Medical .> UC_Route : <<include>>
+UC_Grooming .> UC_Route : <<include>>
+UC_History .> UC_Medical : <<extend>>
+UC_History .> UC_Grooming : <<extend>>
+UC_Reminder .> UC_Medical : <<extend>>
+UC_Reminder .> UC_Grooming : <<extend>>
+
+note bottom of UC_OwnerAuth
+Portal Pemilik terpisah dari Portal Klinik.
+Customer tidak dapat membuka menu admin,
+dokter, groomer, atau manajer.
+end note
+@enduml

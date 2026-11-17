@@ -1,0 +1,55 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+title Deployment Diagram - Prototype HTML RabbitCare
+
+node "Perangkat Pengguna" as Device {
+  node "Web Browser" as Browser {
+    artifact "RabbitCare_Prototype_...html" as App
+    artifact "HTML + CSS + JavaScript" as Frontend
+    database "Browser localStorage" as LS {
+      artifact "rabbitcareOwners" as OA
+      artifact "rabbitcarePrototypeDataV3" as AD
+      artifact "lastOwnerName / lastOwnerPhone" as Last
+    }
+  }
+}
+
+node "Aktor pada Browser yang Sama" as Roles {
+  artifact "Portal Pemilik" as OwnerPortal
+  artifact "Portal Admin" as AdminPortal
+  artifact "Portal Dokter" as DoctorPortal
+  artifact "Portal Groomer" as GroomerPortal
+  artifact "Portal Manajer" as ManagerPortal
+}
+
+App -- Frontend
+Frontend --> LS : baca / tulis data
+OwnerPortal --> App
+AdminPortal --> App
+DoctorPortal --> App
+GroomerPortal --> App
+ManagerPortal --> App
+
+cloud "Belum Ada pada Prototype" as Future {
+  artifact "Backend API" as API
+  database "Database Server" as DB
+  artifact "Authentication Server" as AuthServer
+  artifact "Notification Provider" as Notification
+  artifact "Payment Gateway" as Gateway
+}
+
+App ..> Future : pengembangan produksi
+
+note right of Roles
+Portal berbeda secara menu dan hak akses,
+namun masih berjalan dalam satu file dan
+satu penyimpanan browser.
+end note
+@enduml

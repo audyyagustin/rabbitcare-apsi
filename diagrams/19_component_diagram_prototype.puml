@@ -1,0 +1,72 @@
+@startuml
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #48664C
+skinparam BorderColor #48664C
+skinparam BackgroundColor #FAFCFA
+skinparam NoteBackgroundColor #FFF7E8
+skinparam NoteBorderColor #D99A43
+skinparam componentStyle rectangle
+
+title Component Diagram - Implementasi Prototype HTML RabbitCare
+
+actor "Pemilik" as Owner
+actor "Admin" as Admin
+actor "Dokter" as Doctor
+actor "Groomer" as Groomer
+actor "Manajer" as Manager
+
+package "Browser" {
+  component "Single HTML File" as HTML
+  component "CSS Responsive UI" as CSS
+  component "Authentication & RBAC JS" as Auth
+  component "Pet Profile Module" as Pet
+  component "Booking & Slot Check Module" as Booking
+  component "Payment Instruction & Validation Module" as Payment
+  component "Admin Flow Module" as AdminFlow
+  component "Doctor Medical Record Module" as Medical
+  component "Grooming & Referral Module" as Grooming
+  component "Calendar / History / Reminder Views" as Views
+  component "Manager Reporting Module" as Report
+  database "localStorage
+rabbitcareOwners" as Owners
+  database "localStorage
+rabbitcarePrototypeDataV3" as Data
+  artifact "Embedded QRIS Image
+Base64" as QR
+}
+
+Owner --> HTML
+Admin --> HTML
+Doctor --> HTML
+Groomer --> HTML
+Manager --> HTML
+HTML --> CSS
+HTML --> Auth
+Auth --> Owners
+Auth --> Pet
+Auth --> Booking
+Auth --> Payment
+Auth --> AdminFlow
+Auth --> Medical
+Auth --> Grooming
+Auth --> Views
+Auth --> Report
+Pet --> Data
+Booking --> Data
+Payment --> Data
+Payment --> QR
+AdminFlow --> Data
+Medical --> Data
+Grooming --> Data
+Views --> Data
+Report --> Data
+
+note bottom of Data
+Prototype tidak menggunakan API, server,
+atau database terpusat. Integrasi antarportal
+terjadi karena seluruh peran membaca storage
+browser yang sama pada perangkat yang sama.
+end note
+@enduml
