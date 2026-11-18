@@ -1,33 +1,67 @@
 # RabbitCare – Rabbit Clinic & Care Management System
 
-RabbitCare is a web-based rabbit clinic and care management system prototype designed to support integrated clinic operations. This academic project focuses on business process analysis, requirements analysis, and system modeling to support rabbit healthcare and grooming services.
+### Business Process Analysis & Information Systems Design
 
-## Project Overview
+A web-based rabbit clinic and care management system prototype designed to support integrated clinic operations, including appointment booking, medical examinations, grooming services, payment management, and patient records.
 
-RabbitCare was developed collaboratively as an academic group project for the **Information Systems Analysis and Design (APSI)** course at Universitas Esa Unggul.
+<p align="center">
+  <img src="https://img.shields.io/badge/Project-Academic_Group_Project-2563EB?style=for-the-badge" alt="Group Project"/>
+  <img src="https://img.shields.io/badge/Focus-Business_Analysis-16A34A?style=for-the-badge" alt="Business Analysis"/>
+  <img src="https://img.shields.io/badge/Year-2026-64748B?style=for-the-badge" alt="2026"/>
+</p>
 
-The project aims to analyze clinic operational workflows and design an integrated information system connecting rabbit owners with clinic staff, including administrators, veterinarians, groomers, and clinic managers.
+<p align="center">
+  <a href="./diagrams/">Diagrams & Modeling</a> •
+  <a href="./docs/">Project Documentation</a> •
+  <a href="./docs/RabbitCare_Prototype_Revisi_Pembayaran_dan_Integrasi_Portal.html">Interactive Prototype</a>
+</p>
 
-The system covers the service process from owner registration and rabbit profile management to appointment booking, payment validation, patient check-in, service assignment, medical examination, grooming, health history, and follow-up reminders.
+---
 
-## Project Scope
+## 1. Project Overview
 
-The project covers the analysis and modeling of the following business processes:
+RabbitCare is an academic group project developed for the **Information Systems Analysis and Design (APSI)** course at Universitas Esa Unggul.
 
-- **Owner & Pet Management** — Owner registration, login, and rabbit profile management.
-- **Appointment Booking** — Service selection, schedule management, and booking creation.
-- **Payment Management** — Invoice generation, payment submission, and administrative payment validation.
-- **Check-in & Queue Management** — Patient check-in, queue number generation, and service assignment.
-- **Medical Examination** — Patient examination, diagnosis, treatment records, and follow-up schedules.
-- **Grooming Services** — Pre-service assessment, grooming records, health findings, and doctor referrals.
-- **Health History & Reminders** — Centralized medical and grooming history, calendars, and follow-up reminders.
-- **Operational Reporting** — Management reporting based on booking, payment, queue, and service data.
+The project focuses on analyzing clinic operational workflows and designing an integrated information system that connects rabbit owners with clinic staff, including administrators, veterinarians, groomers, and clinic managers.
 
-## Business Process Analysis
+The proposed system covers the service process from owner registration and rabbit profile management to appointment booking, payment validation, patient check-in, medical examination, grooming services, health history, and follow-up reminders.
 
-The project analyzes RabbitCare's end-to-end business workflows to identify operational activities, user responsibilities, decision points, and interactions between system users.
+**Project Type:** Academic Group Project  
+**Institution:** Universitas Esa Unggul  
+**Course:** Information Systems Analysis and Design (APSI)  
+**Year:** 2026
 
-The main business process involves:
+## 2. Project Objectives
+
+The project aims to:
+
+- Analyze RabbitCare's clinic operational processes.
+- Identify business activities, stakeholder responsibilities, and system requirements.
+- Model end-to-end clinic workflows using BPMN.
+- Design system structures and interactions through UML diagrams.
+- Document business and system requirements.
+- Develop an interactive prototype to illustrate the proposed system.
+
+## 3. Business Process Scope
+
+The project analyzes and models eight main operational areas:
+
+| Business Process | Description |
+|---|---|
+| Owner & Pet Management | Owner registration, login, and rabbit profile management |
+| Appointment Booking | Service selection, schedule management, and booking creation |
+| Payment Management | Invoice generation, payment submission, and administrative validation |
+| Check-in & Queue Management | Patient check-in, queue generation, and service assignment |
+| Medical Examination | Examination, diagnosis, treatment records, and follow-up schedules |
+| Grooming Services | Pre-service assessment, grooming records, health findings, and doctor referrals |
+| Health History & Reminders | Medical and grooming history, calendars, and follow-up reminders |
+| Operational Reporting | Reporting based on booking, payment, queue, and service data |
+
+## 4. Business Process Analysis
+
+The project examines RabbitCare's end-to-end operational workflows to identify activities, responsibilities, decision points, and interactions between stakeholders.
+
+### Main Business Workflow
 
 1. Owner registration and login.
 2. Rabbit profile creation and management.
@@ -40,65 +74,93 @@ The main business process involves:
 9. Service result documentation and health history updates.
 10. Follow-up scheduling and reminder generation.
 
-## Business Process Modeling (BPMN)
+This analysis provides a structured understanding of the clinic's operational activities and serves as a foundation for system modeling.
 
-Business Process Model and Notation (BPMN) was used to visualize and document RabbitCare's end-to-end business workflows.
+## 5. Business Process Modeling (BPMN)
 
-The BPMN model represents five main swimlanes:
+Business Process Model and Notation (BPMN) was used to represent RabbitCare's end-to-end business workflows.
 
-- Owner
-- RabbitCare System
-- Clinic Administrator
-- Veterinarian
-- Groomer
+The BPMN model consists of five main swimlanes:
 
-The model illustrates business activities, process sequences, responsibilities, decision gateways, and interactions between stakeholders throughout the clinic service process.
-
-The BPMN diagram and its editable source file are available in the [diagrams](diagrams/) directory.
-
-## Project Documentation
-
-The repository contains the following group project deliverables:
-
-| Document | Description |
+| Swimlane | Responsibility |
 |---|---|
-| [BRD](docs/RabbitCare_BRD_Prototype_Aligned_v2.pdf) | Business Requirements Document |
-| [MRD](docs/RabbitCare_MRD_Prototype_Aligned_v2.pdf) | Market Requirements Document |
-| [PRD](docs/RabbitCare_PRD_Prototype_Aligned_v2.pdf) | Product Requirements Document |
-| [SRD](docs/RabbitCare_SRD_Prototype_Aligned_v2.pdf) | Software Requirements Document |
-| [Interactive Prototype](docs/RabbitCare_Prototype_Revisi_Pembayaran_dan_Integrasi_Portal.html) | RabbitCare web-based system prototype |
+| Owner | Registration, rabbit profile management, booking, and payment submission |
+| RabbitCare System | Processing booking information, validation, and system notifications |
+| Clinic Administrator | Payment validation, check-in, and queue management |
+| Veterinarian | Medical examination, diagnosis, treatment, and follow-up |
+| Groomer | Grooming assessment and service documentation |
 
-These documents represent collaborative project deliverables developed by the project team.
+The BPMN diagrams illustrate:
 
-## System Modeling & UML Diagrams
+- Business activities and process sequences.
+- Stakeholder responsibilities.
+- Decision gateways.
+- Interactions between users and the system.
+- Relationships between operational processes.
 
-The project also includes UML diagrams developed using PlantUML to represent the system structure, behavior, and interactions.
+**BPMN Documentation:** [Explore BPMN and diagram files](./diagrams/)
 
-The diagrams cover:
+## 6. System Modeling & UML Diagrams
 
-- Use Case Diagrams
-- Activity Diagrams
-- Sequence Diagrams
-- Class Diagram
-- State Diagram
-- Component Diagram
-- Deployment Diagram
+The project uses PlantUML to document the proposed system structure, behavior, and interactions.
 
-The repository includes individual PlantUML source files and a combined diagram source file.
+The repository includes seven types of UML diagrams:
 
-All UML diagram files are available in the [diagrams](diagrams/) directory.
+| Diagram | Purpose |
+|---|---|
+| Use Case Diagram | Represents system actors and their interactions with system functionalities |
+| Activity Diagram | Illustrates activities and operational workflows |
+| Sequence Diagram | Describes interactions and message sequences between system components |
+| Class Diagram | Represents classes, attributes, methods, and relationships |
+| State Diagram | Illustrates changes in the state of system objects |
+| Component Diagram | Describes the organization and relationships of system components |
+| Deployment Diagram | Represents the proposed system deployment structure |
 
-## My Contributions
+The diagram source files are available in the repository.
+
+[View System Diagrams & PlantUML Files](./diagrams/)
+
+## 7. Project Documentation
+
+The project includes collaborative business and system analysis deliverables:
+
+| Deliverable | Description |
+|---|---|
+| BRD | Business Requirements Document |
+| MRD | Market Requirements Document |
+| PRD | Product Requirements Document |
+| SRD | Software Requirements Document |
+| Interactive Prototype | Web-based prototype illustrating the proposed RabbitCare system |
+
+These documents represent group project deliverables prepared collaboratively by the project team. My individual contribution to the documentation and modeling process is described in the section below.
+
+**Project Files:** [Browse Documentation Folder](./docs/)
+
+**Interactive Prototype:** [Open RabbitCare Prototype](./docs/RabbitCare_Prototype_Revisi_Pembayaran_dan_Integrasi_Portal.html)
+
+## 8. My Contributions
 
 **Neng Audy Agustin**
 
 My individual contributions focused on business process analysis, business process modeling, and project documentation.
 
-- **Business Process Analysis** — Analyzed business processes and operational workflows to identify business needs, operational activities, and system requirements.
-- **BPMN Modeling** — Developed Business Process Model and Notation (BPMN) diagrams to visualize business activities, workflows, stakeholder responsibilities, and process relationships.
-- **Project Documentation** — Contributed to documenting and organizing business process analysis and system modeling deliverables.
+**Business Process Analysis**
+- Analyzed business processes and operational workflows.
+- Identified business activities, stakeholder responsibilities, and operational requirements.
+- Examined relationships between clinic activities and proposed system processes.
 
-## Tools & Technologies
+**BPMN Modeling**
+- Developed Business Process Model and Notation (BPMN) diagrams.
+- Visualized business activities and end-to-end workflows.
+- Represented stakeholder responsibilities through swimlanes.
+- Modeled process sequences, decision points, and stakeholder interactions.
+
+**Project Documentation**
+- Contributed to organizing business process analysis and system modeling deliverables.
+- Helped document and structure project analysis results.
+- Supported the organization of collaborative project documentation.
+
+## 9. Tools & Technologies
 
 | Tool / Method | Purpose |
 |---|---|
@@ -108,21 +170,42 @@ My individual contributions focused on business process analysis, business proce
 | HTML Prototype | Interactive system prototype |
 | PDF | Project documentation and deliverables |
 
-## Project Limitations
+## 10. Project Limitations
 
 RabbitCare is an academic interactive prototype and is not yet a production-ready application.
 
-- Data persistence currently relies on browser storage rather than a centralized production database.
+The current prototype has several limitations:
+
+- Data persistence relies on browser storage rather than a centralized production database.
 - Payment processing is simulated and is not connected to a real payment gateway.
 - Backend API and production server infrastructure have not been implemented.
-- The dedicated manager interface is not yet available in the prototype.
+- A dedicated manager interface is not yet available.
 
-These limitations represent potential areas for future development.
+These limitations provide opportunities for further system development and improvement.
 
-## Project Information
+## 11. Project Information
 
-**Project:** RabbitCare – Rabbit Clinic & Care Management System  
-**Course:** Information Systems Analysis and Design (APSI)  
-**Institution:** Universitas Esa Unggul  
-**Project Type:** Academic Group Project  
-**Year:** 2026
+| Information | Details |
+|---|---|
+| Project Name | RabbitCare – Rabbit Clinic & Care Management System |
+| Project Type | Academic Group Project |
+| Course | Information Systems Analysis and Design (APSI) |
+| Institution | Universitas Esa Unggul |
+| Year | 2026 |
+| Repository | GitHub |
+
+---
+
+<p align="center">
+
+**RabbitCare – Rabbit Clinic & Care Management System**
+
+*Business Process Analysis & Information Systems Design*
+
+Developed collaboratively as an academic group project.
+
+**Individual Contribution:** Neng Audy Agustin
+
+Universitas Esa Unggul · 2026
+
+</p>
