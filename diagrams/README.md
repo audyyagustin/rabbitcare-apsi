@@ -60,7 +60,3 @@ Buka file `.puml`, salin seluruh isinya ke editor PlantUML yang biasa digunakan,
 - Check-in hanya dapat dilakukan setelah pembayaran berstatus `PAID`.
 - Grooming yang tidak aman atau membutuhkan pemeriksaan dokter menghasilkan rujukan.
 - Kebutuhan laporan manajer tercantum dalam PRD, tetapi laporan analisis menyebut halaman manajer belum tersedia pada dokumentasi screenshot. Diagram manajer karena itu diberi catatan sebagai rancangan/kebutuhan PRD.
-
-## Rekomendasi untuk GitHub
-
-Simpan folder ini, misalnya, pada `docs/diagrams/plantuml/`. Pertahankan file `.puml` sebagai sumber utama agar diagram mudah direvisi. Setelah dirender, letakkan SVG pada folder `rendered/` dan tautkan SVG tersebut dari README repository agar diagram dapat dilihat langsung tanpa membuka sumber PlantUML.
