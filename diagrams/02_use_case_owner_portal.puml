@@ -1,74 +1,60 @@
 @startuml
-skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
 left to right direction
+skinparam shadowing false
 skinparam actorStyle awesome
-skinparam usecase {
-  BackgroundColor White
-  BorderColor #48664C
+
+title Use Case Detail - Portal Pemilik Kelinci
+
+actor "Pemilik Kelinci" as Owner
+actor "Layanan Notifikasi" as Notification <<system>>
+
+rectangle "Portal Pemilik Rabbit Clinic and Care" {
+  usecase "Registrasi Akun" as U1
+  usecase "Login" as U2
+  usecase "Kelola Profil Pemilik" as U3
+  usecase "Tambah Profil Kelinci" as U4
+  usecase "Ubah Profil Kelinci" as U5
+  usecase "Lihat Profil Kelinci" as U6
+  usecase "Melakukan Booking Layanan" as U7
+  usecase "Pilih Kelinci" as U8
+  usecase "Pilih Jenis Layanan" as U9
+  usecase "Pilih Jadwal Tersedia" as U10
+  usecase "Konfirmasi Booking" as U11
+  usecase "Lihat Status Booking" as U12
+  usecase "Batalkan Booking" as U13
+  usecase "Jadwalkan Ulang Booking" as U14
+  usecase "Lihat Riwayat Kesehatan" as U15
+  usecase "Lihat Riwayat Vaksin" as U16
+  usecase "Lihat Riwayat Grooming" as U17
+  usecase "Lihat Tagihan dan Bukti Bayar" as U18
+  usecase "Terima Reminder Perawatan" as U19
+  usecase "Booking dari Reminder" as U20
 }
 
-title Use Case - Portal Pemilik RabbitCare
+Owner -- U1
+Owner -- U2
+Owner -- U3
+Owner -- U4
+Owner -- U5
+Owner -- U6
+Owner -- U7
+Owner -- U12
+Owner -- U13
+Owner -- U14
+Owner -- U15
+Owner -- U16
+Owner -- U17
+Owner -- U18
+Owner -- U19
+Owner -- U20
+Notification -- U19
 
-actor "Pemilik / Customer" as Owner
-rectangle "Portal Pemilik" {
-  usecase "Daftar Akun" as Register
-  usecase "Login" as Login
-  usecase "Logout" as Logout
-  usecase "Tambah Profil Kelinci" as AddPet
-  usecase "Ubah Profil Kelinci" as EditPet
-  usecase "Lihat Daftar Kelinci" as ViewPets
-  usecase "Pilih Kelinci" as SelectPet
-  usecase "Pilih Layanan, Tanggal,
-dan Slot" as SelectService
-  usecase "Buat Booking" as CreateBooking
-  usecase "Cek Benturan Slot" as SlotCheck
-  usecase "Pilih Transfer Bank" as Bank
-  usecase "Pilih QRIS" as QRIS
-  usecase "Pilih E-wallet
-DANA / GoPay / OVO" as Wallet
-  usecase "Isi Nama Pengirim" as Payer
-  usecase "Kirim Pengajuan Pembayaran" as SubmitPay
-  usecase "Lihat Status Booking
-dan Pembayaran" as Status
-  usecase "Lihat Kalender" as Calendar
-  usecase "Lihat Riwayat Medis,
-Vaksinasi, dan Grooming" as History
-  usecase "Lihat Reminder Kontrol
-dan Grooming" as Reminder
-}
-
-Owner -- Register
-Owner -- Login
-Owner -- Logout
-Owner -- AddPet
-Owner -- EditPet
-Owner -- ViewPets
-Owner -- CreateBooking
-Owner -- Bank
-Owner -- QRIS
-Owner -- Wallet
-Owner -- Status
-Owner -- Calendar
-Owner -- History
-Owner -- Reminder
-
-AddPet .> ViewPets : <<include>>
-EditPet .> ViewPets : <<include>>
-CreateBooking .> SelectPet : <<include>>
-CreateBooking .> SelectService : <<include>>
-CreateBooking .> SlotCheck : <<include>>
-Bank .> Payer : <<include>>
-QRIS .> Payer : <<include>>
-Wallet .> Payer : <<include>>
-SubmitPay .> Payer : <<include>>
-Bank .> SubmitPay : <<include>>
-QRIS .> SubmitPay : <<include>>
-Wallet .> SubmitPay : <<include>>
+U7 .> U8 : <<include>>
+U7 .> U9 : <<include>>
+U7 .> U10 : <<include>>
+U7 .> U11 : <<include>>
+U13 .> U12 : <<extend>>
+U14 .> U12 : <<extend>>
+U20 .> U19 : <<extend>>
+U20 .> U7 : <<include>>
 @enduml
