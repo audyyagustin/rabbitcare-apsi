@@ -1,46 +1,45 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Registrasi Pemilik dan Profil Kelinci
+title Activity Diagram - Registrasi dan Profil Kelinci
+
+|Pemilik Kelinci|
 start
-:Pengguna memilih Portal Pemilik;
-if (Sudah memiliki akun?) then (Ya)
-  :Masukkan email dan kata sandi;
-  :Sistem membaca rabbitcareOwners;
-  if (Kata sandi sesuai?) then (Ya)
-    :Buat sesi sebagai owner;
-  else (Tidak)
-    :Tampilkan login gagal;
-    stop
-  endif
-else (Belum)
-  :Pilih Daftar;
-  :Isi nama, telepon, email, dan kata sandi;
-  if (Email sudah terdaftar?) then (Ya)
-    :Tampilkan email sudah terdaftar;
-    stop
-  else (Tidak)
-    :Simpan akun ke localStorage rabbitcareOwners;
-    :Buat sesi sebagai owner;
-  endif
-endif
-:Masuk Dashboard Pemilik;
-if (Tambah profil kelinci?) then (Ya)
-  :Isi nama, ras, jenis kelamin,
-tanggal lahir, warna, berat, status steril;
-  :Buat pet ID unik;
-  :Hubungkan pet dengan ownerEmail;
-  :Simpan ke rabbitcarePrototypeDataV3.pets;
-  :Tampilkan pada Profil Kelinci,
-booking, riwayat, kalender, dan admin;
+:Buka aplikasi / website;
+:Memilih registrasi;
+:Mengisi data akun;
+
+|Sistem|
+:Validasi kelengkapan dan keunikan data;
+if (Data valid?) then (Ya)
+  :Menyimpan akun;
+  :Mengirim konfirmasi registrasi;
 else (Tidak)
-  :Lanjut menggunakan dashboard;
+  :Menampilkan pesan kesalahan;
+  |Pemilik Kelinci|
+  :Memperbaiki data akun;
+  |Sistem|
+  :Validasi ulang;
 endif
-stop
+
+|Pemilik Kelinci|
+:Login;
+:Memilih menu tambah profil kelinci;
+:Mengisi identitas, kondisi, dan riwayat awal kelinci;
+:Mengunggah foto (opsional);
+
+|Sistem|
+:Validasi data profil kelinci;
+if (Data profil lengkap?) then (Ya)
+  :Membuat ID pasien / nomor rekam medis;
+  :Menyimpan profil kelinci;
+  :Menampilkan profil berhasil dibuat;
+  stop
+else (Tidak)
+  :Menampilkan field yang harus diperbaiki;
+  |Pemilik Kelinci|
+  :Melengkapi profil kelinci;
+  |Sistem|
+  :Menyimpan profil setelah valid;
+  stop
+endif
 @enduml
