@@ -1,40 +1,41 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Sequence - Grooming, Penyelesaian, atau Rujukan
-actor Groomer
-participant GroomerUI as "Dashboard/Form Groomer"
-participant GroomingJS as "Grooming JS"
-database Store as "localStorage App Data"
-participant AdminUI as "Portal Admin"
-participant History as "Riwayat Pemilik"
-participant Calendar as "Kalender dan Reminder"
+title Sequence Diagram - Grooming dan Rabbit Care
 
-Groomer -> GroomerUI : buka pasien assigned groomer
-GroomerUI -> GroomingJS : openGroomingForm(id)
-GroomingJS -> Store : status = SEDANG_DILAYANI
-Groomer -> GroomerUI : isi kondisi awal dan keamanan
-alt aman dan tidak perlu rujukan
-  Groomer -> GroomerUI : isi hasil, temuan, nextDate
-  GroomerUI -> GroomingJS : saveGroomingResult()
-  GroomingJS -> Store : groomingRecord + SELESAI
-completedRole = groomer
-  opt nextDate tersedia
-    GroomingJS -> Store : reminder Grooming Berikutnya
+actor "Groomer / Pet Care Staff" as Groomer
+boundary "Portal Klinik" as UI
+control "Grooming Controller" as GC
+control "Reminder Service" as RS
+control "Billing Service" as BS
+database "Database" as DB
+actor "Dokter Hewan" as Doctor
+
+Groomer -> UI : Buka antrean grooming
+UI -> GC : getGroomingQueue()
+GC -> DB : query booking grooming check-in
+DB --> GC : daftar antrean
+GC --> UI : daftar antrean
+Groomer -> UI : Pilih pasien dan input kondisi awal
+UI -> GC : assessInitialCondition(data kondisi)
+
+alt Aman untuk grooming
+  Groomer -> UI : Input tindakan dan hasil grooming
+  UI -> GC : saveGroomingRecord(data hasil)
+  GC -> DB : simpan riwayat grooming
+  GC -> RS : scheduleNextGrooming(rekomendasi tanggal)
+  RS -> DB : simpan reminder grooming
+  GC -> BS : addGroomingCharge(idBooking)
+  BS -> DB : tambah item tagihan
+  opt Ada temuan kesehatan
+    GC -> DB : simpan temuan kesehatan
+    GC --> Doctor : Notifikasi rekomendasi pemeriksaan
   end
-  Store --> History : hasil grooming tampil
-  Store --> Calendar : booking/reminder tampil
-else tidak aman atau perlu dokter
-  GroomerUI -> GroomingJS : stopGroomingIntegrated()
-  GroomingJS -> Store : groomingRecord + referral
-status = PERLU_RUJUKAN
-assignedRole dikosongkan
-  Store --> AdminUI : tombol Arahkan ke Dokter
+  GC --> UI : layanan grooming selesai
+else Tidak aman untuk grooming
+  Groomer -> UI : Input alasan penundaan
+  UI -> GC : postponeGrooming(alasan)
+  GC -> DB : update status=Ditunda
+  GC --> Doctor : Rekomendasi pemeriksaan
+  GC --> UI : penundaan berhasil dicatat
 end
 @enduml
