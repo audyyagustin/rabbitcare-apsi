@@ -1,84 +1,86 @@
 @startuml
-skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
 left to right direction
+skinparam shadowing false
 skinparam actorStyle awesome
-skinparam usecase {
-  BackgroundColor White
-  BorderColor #48664C
-}
 
-title Use Case - Portal Klinik RabbitCare
+title Use Case Detail - Operasional Klinik
 
-actor "Admin Klinik" as Admin
+actor "Admin / Resepsionis" as Admin
 actor "Dokter Hewan" as Doctor
-actor "Groomer / Pet Care" as Groomer
+actor "Groomer / Pet Care Staff" as Groomer
 actor "Manajer Klinik" as Manager
 
-rectangle "Portal Klinik" {
-  usecase "Login Sesuai Peran" as Login
-  usecase "Lihat Booking Customer" as ViewBooking
-  usecase "Validasi / Tolak Pembayaran" as ValidatePay
-  usecase "Check-in Pasien" as CheckIn
-  usecase "Buat Nomor Antrean" as Queue
-  usecase "Arahkan ke Dokter
-atau Groomer" as Route
-  usecase "Pantau Status Tindakan" as Monitor
-  usecase "Lihat Data Pasien" as Patients
-  usecase "Isi Anamnesis dan
-Pemeriksaan Fisik" as Exam
-  usecase "Isi Diagnosis, Tindakan,
-Resep, dan Kontrol" as Medical
-  usecase "Simpan Draft Pemeriksaan" as Draft
-  usecase "Pre-check Keamanan Grooming" as Precheck
-  usecase "Simpan Hasil dan Temuan" as GroomResult
-  usecase "Hentikan Grooming dan
-Buat Rujukan Dokter" as Referral
-  usecase "Lihat Statistik Pasien, Booking,
-Pendapatan, dan Penyelesaian" as Report
-  usecase "Lihat Kalender Sesuai Peran" as Calendar
-  usecase "Lihat Riwayat Sesuai Akses" as History
+rectangle "Portal Operasional Rabbit Clinic and Care" {
+  usecase "Login Petugas" as C1
+  usecase "Kelola Data Pemilik" as C2
+  usecase "Kelola Data Pasien Kelinci" as C3
+  usecase "Kelola Jenis Layanan dan Harga" as C4
+  usecase "Kelola Jadwal Dokter" as C5
+  usecase "Kelola Jadwal Groomer" as C6
+  usecase "Konfirmasi Booking" as C7
+  usecase "Ubah / Batalkan Booking" as C8
+  usecase "Check-in Pasien" as C9
+  usecase "Catat Berat dan Keluhan Awal" as C10
+  usecase "Kelola Antrean" as C11
+  usecase "Lihat Riwayat Kesehatan" as C12
+  usecase "Catat Pemeriksaan Fisik" as C13
+  usecase "Catat Diagnosis dan Tindakan" as C14
+  usecase "Buat Resep dan Rekomendasi" as C15
+  usecase "Tentukan Jadwal Kontrol" as C16
+  usecase "Catat Vaksinasi" as C17
+  usecase "Tunda Vaksinasi" as C18
+  usecase "Catat Hasil Grooming" as C19
+  usecase "Rujuk Temuan ke Dokter" as C20
+  usecase "Buat Tagihan" as C21
+  usecase "Konfirmasi Pembayaran" as C22
+  usecase "Terbitkan Bukti Pembayaran" as C23
+  usecase "Lihat Dashboard Manajemen" as C24
+  usecase "Lihat Laporan Operasional" as C25
 }
 
-Admin -- Login
-Admin -- ViewBooking
-Admin -- ValidatePay
-Admin -- CheckIn
-Admin -- Route
-Admin -- Monitor
-Admin -- Patients
-Admin -- Calendar
+Admin -- C1
+Admin -- C2
+Admin -- C3
+Admin -- C4
+Admin -- C5
+Admin -- C6
+Admin -- C7
+Admin -- C8
+Admin -- C9
+Admin -- C11
+Admin -- C21
+Admin -- C22
+Admin -- C23
 
-Doctor -- Login
-Doctor -- Exam
-Doctor -- Medical
-Doctor -- Draft
-Doctor -- Calendar
-Doctor -- History
+Doctor -- C1
+Doctor -- C11
+Doctor -- C12
+Doctor -- C13
+Doctor -- C14
+Doctor -- C15
+Doctor -- C16
+Doctor -- C17
+Doctor -- C18
 
-Groomer -- Login
-Groomer -- Precheck
-Groomer -- GroomResult
-Groomer -- Referral
-Groomer -- Calendar
-Groomer -- History
+Groomer -- C1
+Groomer -- C11
+Groomer -- C19
+Groomer -- C20
 
-Manager -- Login
-Manager -- Report
-Manager -- Calendar
-Manager -- History
+Manager -- C1
+Manager -- C24
+Manager -- C25
 
-CheckIn .> ValidatePay : <<include>>
-CheckIn .> Queue : <<include>>
-Route .> CheckIn : <<include>>
-Medical .> Exam : <<include>>
-GroomResult .> Precheck : <<include>>
-Referral .> Precheck : <<extend>>
-[jika tidak aman]
+C9 .> C10 : <<include>>
+C9 .> C11 : <<include>>
+C13 .> C12 : <<include>>
+C14 .> C13 : <<include>>
+C15 .> C14 : <<extend>>
+C16 .> C14 : <<extend>>
+C17 .> C13 : <<include>>\n(pemeriksaan pra-vaksin)
+C18 .> C17 : <<extend>>\n(tidak layak vaksin)
+C20 .> C19 : <<extend>>\n(ada temuan kesehatan)
+C22 .> C21 : <<include>>
+C23 .> C22 : <<include>>
+C25 .> C24 : <<extend>>
 @enduml
