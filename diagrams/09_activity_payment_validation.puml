@@ -1,40 +1,48 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Pembayaran dan Validasi Admin
+title Activity Diagram - Tagihan dan Pembayaran
+
+|Sistem|
 start
-:Customer membuka invoice;
-if (Payment status?) then (UNPAID / REJECTED)
-  :Pilih metode pembayaran;
-  :Lihat tujuan pembayaran;
-  :Isi nama pengirim saja;
-  :Kirim pengajuan;
-  :Payment = SUBMITTED;
-  :Booking = MENUNGGU_VALIDASI;
-elseif (SUBMITTED)
-  :Customer melihat Menunggu Validasi;
-elseif (PAID)
-  :Customer melihat pembayaran tervalidasi;
-endif
-:Admin membuka Validasi Pembayaran;
-if (Payment = SUBMITTED?) then (Ya)
-  if (Admin menerima?) then (Valid)
-    :Payment = PAID;
-    :Simpan validatedAt dan validatedBy;
-    :Booking = TERKONFIRMASI;
-    :Booking dapat di-check-in;
-  else (Tolak)
-    :Payment = REJECTED;
-    :Booking = MENUNGGU_PEMBAYARAN;
-  endif
+:Menerima rincian layanan selesai;
+:Menghitung konsultasi, tindakan, obat, vaksin, grooming, dan tambahan;
+:Membuat tagihan berstatus "Belum Dibayar";
+
+|Admin / Resepsionis|
+:Memeriksa rincian tagihan;
+if (Rincian sudah benar?) then (Ya)
+  :Menyerahkan tagihan kepada pemilik;
 else (Tidak)
-  :Tidak ada tindakan validasi;
+  :Memperbaiki item tagihan;
+  |Sistem|
+  :Menghitung ulang total;
+  |Admin / Resepsionis|
+  :Menyerahkan tagihan yang diperbarui;
 endif
-stop
+
+|Pemilik Kelinci|
+:Memilih metode pembayaran;
+:Melakukan pembayaran;
+
+|Admin / Resepsionis|
+:Memverifikasi pembayaran;
+if (Pembayaran berhasil?) then (Ya)
+  :Mengonfirmasi pembayaran;
+  |Sistem|
+  :Mengubah status menjadi "Lunas";
+  :Menerbitkan bukti pembayaran;
+  |Pemilik Kelinci|
+  :Menerima bukti pembayaran;
+  stop
+else (Tidak)
+  :Menginformasikan pembayaran gagal / kurang;
+  |Pemilik Kelinci|
+  :Mengulangi atau mengganti metode pembayaran;
+  |Admin / Resepsionis|
+  :Memverifikasi ulang;
+  |Sistem|
+  :Mengubah status menjadi "Lunas" setelah valid;
+  :Menerbitkan bukti pembayaran;
+  stop
+endif
 @enduml
