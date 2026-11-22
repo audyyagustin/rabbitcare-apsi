@@ -1,0 +1,40 @@
+@startuml
+skinparam shadowing false
+title Sequence Diagram - Pelayanan Vaksinasi
+
+actor "Dokter Hewan" as Doctor
+boundary "Portal Klinik" as UI
+control "Vaccination Controller" as VC
+control "Medical Record Service" as MRS
+control "Reminder Service" as RS
+control "Billing Service" as BS
+database "Database" as DB
+
+Doctor -> UI : Pilih pasien vaksinasi
+UI -> VC : getVaccinationContext(idBooking)
+VC -> DB : query profil, riwayat medis, riwayat vaksin
+DB --> VC : data pasien dan vaksin
+VC --> UI : tampilkan data
+Doctor -> UI : Input hasil pemeriksaan pra-vaksin
+UI -> VC : assessEligibility(data pemeriksaan)
+
+alt Layak divaksin
+  Doctor -> UI : Input jenis, dosis, batch, tanggal, reaksi
+  UI -> VC : saveVaccination(data vaksin)
+  VC -> DB : simpan catatan vaksinasi
+  VC -> MRS : appendToMedicalHistory()
+  MRS -> DB : perbarui riwayat kesehatan
+  VC -> RS : scheduleNextVaccination(tanggal berikutnya)
+  RS -> DB : simpan reminder vaksin
+  VC -> BS : addVaccinationCharge(idBooking)
+  BS -> DB : tambah item tagihan
+  VC --> UI : vaksinasi berhasil dicatat
+else Tidak layak divaksin
+  Doctor -> UI : Input alasan penundaan dan rekomendasi
+  UI -> VC : postponeVaccination(alasan, jadwal ulang)
+  VC -> DB : simpan status=Vaksin Ditunda
+  VC -> RS : scheduleFollowUp(jadwal ulang)
+  RS -> DB : simpan reminder jadwal ulang
+  VC --> UI : penundaan berhasil dicatat
+end
+@enduml
