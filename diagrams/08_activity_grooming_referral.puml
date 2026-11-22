@@ -1,44 +1,42 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Grooming, Pre-check, dan Rujukan
+title Activity Diagram - Grooming dan Rabbit Care
+
+|Pemilik Kelinci|
 start
-:Groomer login Portal Klinik;
-:Groomer melihat pasien yang assignedRole = groomer;
-:Groomer membuka pasien;
-:Status = SEDANG_DILAYANI;
-:Isi kondisi awal / pre-check;
-if (Kondisi aman?) then (Ya)
-  :Lakukan grooming;
-  :Isi hasil dan temuan;
-  if (Perlu rujukan dokter?) then (Ya)
-    :Simpan groomingRecord;
-    :Buat referral;
-    :Status = PERLU_RUJUKAN;
-    :Kosongkan assignedRole dan assignedStaff;
-    :Admin mengarahkan ulang ke dokter;
-  else (Tidak)
-    :Isi jadwal grooming berikutnya jika ada;
-    :Simpan groomingRecord;
-    :Status = SELESAI;
-    :completedRole = groomer;
-    if (Ada jadwal berikutnya?) then (Ya)
-      :Buat reminder Grooming Berikutnya;
-    endif
+:Memilih profil kelinci;
+:Memilih jenis grooming / rabbit care;
+:Memilih jadwal;
+
+|Sistem|
+:Memeriksa ketersediaan groomer;
+:Menyimpan booking dan mengirim konfirmasi;
+
+|Admin / Resepsionis|
+:Melakukan check-in;
+:Memasukkan pasien ke antrean grooming;
+
+|Groomer / Pet Care Staff|
+:Melakukan pemeriksaan kondisi awal;
+if (Aman untuk grooming?) then (Ya)
+  :Melakukan layanan grooming;
+  :Mencatat tindakan dan hasil grooming;
+  if (Ada temuan kesehatan?) then (Ya)
+    :Mencatat temuan;
+    :Menyarankan pemeriksaan dokter;
   endif
+  :Memberikan rekomendasi perawatan berikutnya;
+  |Sistem|
+  :Menyimpan riwayat grooming;
+  :Membuat reminder grooming berikutnya;
+  :Mengirim data layanan ke penagihan;
+  stop
 else (Tidak)
-  :Hentikan layanan;
-  :Simpan alasan / temuan;
-  :Buat referral;
-  :Status = PERLU_RUJUKAN;
-  :Admin mengarahkan pasien ke dokter;
+  :Menghentikan / menunda grooming;
+  :Mencatat alasan layanan tidak dilakukan;
+  :Menyarankan pemeriksaan dokter;
+  |Sistem|
+  :Mengubah status layanan menjadi "Ditunda";
+  stop
 endif
-:Riwayat, kalender, admin, dan manajer diperbarui;
-stop
 @enduml
