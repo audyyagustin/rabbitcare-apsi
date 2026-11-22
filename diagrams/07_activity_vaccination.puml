@@ -1,0 +1,39 @@
+@startuml
+skinparam shadowing false
+title Activity Diagram - Pelayanan Vaksinasi
+
+|Pemilik Kelinci|
+start
+:Memilih layanan vaksinasi;
+:Memilih profil kelinci dan jadwal;
+
+|Sistem|
+:Menampilkan riwayat vaksin;
+:Memeriksa jadwal vaksin yang direkomendasikan;
+:Menyimpan booking vaksinasi;
+
+|Admin / Resepsionis|
+:Mengonfirmasi booking dan check-in;
+
+|Dokter Hewan|
+:Membuka riwayat kesehatan dan vaksin;
+:Melakukan anamnesis dan pemeriksaan pra-vaksin;
+if (Kelinci layak divaksin?) then (Ya)
+  :Memberikan vaksin;
+  :Mencatat jenis, dosis, batch, tanggal, dan reaksi;
+  :Menentukan jadwal vaksin berikutnya;
+  |Sistem|
+  :Menyimpan catatan vaksinasi;
+  :Membuat reminder vaksin berikutnya;
+  :Mengirim data layanan ke penagihan;
+  stop
+else (Tidak)
+  :Mencatat alasan penundaan;
+  :Memberikan saran perawatan / pemeriksaan;
+  :Menentukan jadwal ulang bila diperlukan;
+  |Sistem|
+  :Mengubah status menjadi "Vaksin Ditunda";
+  :Membuat reminder jadwal ulang;
+  stop
+endif
+@enduml
