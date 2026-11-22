@@ -1,0 +1,38 @@
+@startuml
+skinparam shadowing false
+title Sequence Diagram - Tagihan dan Pembayaran
+
+actor "Admin / Resepsionis" as Admin
+actor "Pemilik Kelinci" as Owner
+boundary "Portal Klinik" as UI
+control "Billing Controller" as BC
+database "Database" as DB
+control "Document Service" as DS
+
+Admin -> UI : Buka tagihan pasien
+UI -> BC : getInvoice(idBooking)
+BC -> DB : query tagihan dan item layanan
+DB --> BC : detail tagihan
+BC --> UI : tampilkan rincian dan total
+
+opt Ada koreksi item
+  Admin -> UI : Ubah item / jumlah
+  UI -> BC : updateInvoiceItem()
+  BC -> DB : simpan perubahan dan hitung ulang
+  DB --> BC : total terbaru
+  BC --> UI : tampilkan total terbaru
+end
+
+Admin --> Owner : Menyerahkan rincian tagihan
+Owner --> Admin : Membayar dengan metode yang dipilih
+Admin -> UI : Konfirmasi pembayaran
+UI -> BC : confirmPayment(data pembayaran)
+BC -> DB : simpan pembayaran\nupdate invoice=Lunas
+DB --> BC : pembayaran berhasil
+BC -> DS : generateReceipt(idInvoice)
+DS -> DB : ambil data transaksi
+DB --> DS : data transaksi
+DS --> BC : bukti pembayaran
+BC --> UI : tampilkan / kirim bukti pembayaran
+Admin --> Owner : Bukti pembayaran
+@enduml
