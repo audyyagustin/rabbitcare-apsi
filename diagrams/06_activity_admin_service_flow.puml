@@ -1,49 +1,57 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Alur Admin dari Pembayaran sampai Pengarahan
+title Activity Diagram - Kedatangan dan Pemeriksaan Kesehatan
+
+|Pemilik Kelinci|
 start
-:Admin login melalui Portal Klinik;
-:Admin membuka booking customer;
-if (Payment status = SUBMITTED?) then (Ya)
-  :Periksa metode, tujuan, nama pengirim, dan total;
-  if (Pembayaran valid?) then (Ya)
-    :Payment status = PAID;
-    :Booking status = TERKONFIRMASI;
+:Datang dan menunjukkan nomor booking;
+
+|Admin / Resepsionis|
+:Mencari data booking;
+:Memverifikasi pemilik dan pasien kelinci;
+if (Booking ditemukan?) then (Ya)
+  :Mengubah status menjadi "Check-in";
+  :Mencatat berat dan keluhan awal;
+  :Membuat nomor antrean;
+else (Tidak)
+  :Mencari profil pasien / membuat kunjungan walk-in;
+  :Memverifikasi ketersediaan layanan;
+  if (Dapat dilayani?) then (Ya)
+    :Membuat booking kunjungan;
+    :Melakukan check-in;
   else (Tidak)
-    :Payment status = REJECTED;
-    :Booking status = MENUNGGU_PEMBAYARAN;
-    :Customer harus mengajukan ulang;
+    :Menawarkan jadwal lain;
     stop
   endif
+endif
+
+|Sistem|
+:Menambahkan pasien ke antrean dokter;
+
+|Dokter Hewan|
+:Membuka daftar antrean;
+:Memilih pasien;
+:Melihat profil dan riwayat kesehatan;
+:Melakukan anamnesis;
+:Melakukan pemeriksaan fisik;
+if (Kondisi darurat?) then (Ya)
+  :Memberikan tindakan prioritas / stabilisasi;
 else (Tidak)
-  :Tunggu pembayaran customer;
-  stop
+  :Melanjutkan pemeriksaan normal;
 endif
-:Admin melakukan check-in;
-if (Pembayaran sudah PAID?) then (Ya)
-  :Simpan waktu check-in;
-  :Buat nomor antrean D-xxx atau G-xxx;
-  :Booking status = CHECK_IN;
-else (Tidak)
-  :Tolak check-in;
-  stop
+:Menentukan diagnosis / dugaan penyakit;
+:Mencatat tindakan medis;
+if (Perlu obat?) then (Ya)
+  :Membuat resep;
 endif
-:Admin memilih tujuan petugas;
-if (Tujuan?) then (Dokter)
-  :Pilih dokter;
-  :Status = DIARAHKAN_DOKTER;
-else (Groomer)
-  :Pilih groomer;
-  :Status = DIARAHKAN_GROOMER;
+if (Perlu kontrol?) then (Ya)
+  :Menentukan tanggal kontrol;
 endif
-:Booking muncul pada dashboard petugas terkait;
-:Admin memantau sampai SEDANG_DILAYANI atau SELESAI;
+:Menyimpan catatan pemeriksaan;
+
+|Sistem|
+:Memperbarui riwayat kesehatan;
+:Mengubah status layanan menjadi "Selesai Dilayani";
+:Mengirim data layanan ke proses penagihan;
 stop
 @enduml
