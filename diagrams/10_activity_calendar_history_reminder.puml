@@ -1,40 +1,41 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Integrasi Kalender, Riwayat, dan Reminder
+title Activity Diagram - Reminder Perawatan
+
+|Sistem|
 start
-:Pengguna login sesuai peran;
-:Sistem membaca pets dan bookings dari localStorage;
-if (Peran = owner?) then (Ya)
-  :Filter data berdasarkan ownerEmail;
-elseif (Peran = doctor?) then (Ya)
-  :Filter booking assigned/completed doctor;
-elseif (Peran = groomer?) then (Ya)
-  :Filter booking assigned/completed groomer;
-else (Admin / Manager)
-  :Gunakan seluruh data klinik;
-endif
-fork
-  :Kalender membentuk agenda dari tanggal booking;
-  :Tambahkan reminder dueDate sebagai agenda;
-fork again
-  :Riwayat memilih pet yang benar dari scopedPets;
-  :Bangun entri dari medicalRecord dan groomingRecord;
-  :Klasifikasikan vaksinasi dari jenis layanan;
-fork again
-  :Reminder dibentuk dari followUpDate atau nextDate;
-  :Tampilkan jumlah dan status reminder;
-end fork
-if (Data tersedia?) then (Ya)
-  :Tampilkan data sesuai kelinci dan peran;
+:Menjalankan pengecekan jadwal harian;
+:Membaca jadwal vaksin, kontrol, obat, grooming, kuku, gigi, dan berat badan;
+:Memilih jadwal yang mendekati tenggat;
+if (Ada reminder jatuh tempo?) then (Ya)
+  :Membuat pesan reminder;
+  :Mengirim melalui kanal pilihan pemilik;
 else (Tidak)
-  :Tampilkan empty state tanpa data contoh;
+  :Mencatat tidak ada reminder;
+  stop
 endif
-stop
+
+|Layanan Notifikasi|
+:Meneruskan pesan ke email / WhatsApp / push notification;
+
+|Pemilik Kelinci|
+:Menerima dan membuka reminder;
+if (Ingin booking sekarang?) then (Ya)
+  :Memilih tombol booking;
+  |Sistem|
+  :Membuka halaman booking dengan data kelinci dan layanan terisi;
+  |Pemilik Kelinci|
+  :Memilih jadwal dan mengonfirmasi;
+  |Sistem|
+  :Menyimpan booking;
+  :Menandai reminder "Ditindaklanjuti";
+  stop
+else (Tidak)
+  |Sistem|
+  :Menandai reminder "Terkirim";
+  if (Belum ditindaklanjuti sampai batas ulang?) then (Ya)
+    :Menjadwalkan reminder ulang;
+  endif
+  stop
+endif
 @enduml
