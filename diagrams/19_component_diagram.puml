@@ -1,0 +1,65 @@
+@startuml
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+title Component Diagram - Rabbit Clinic and Care
+
+actor "Pemilik Kelinci" as Owner
+actor "Petugas Klinik" as Staff
+actor "Manajer Klinik" as Manager
+
+component "Portal Pemilik\n(Web/Mobile)" as OwnerPortal
+component "Portal Klinik\n(Web)" as ClinicPortal
+component "Dashboard Manajemen" as ManagerPortal
+component "API / Application Layer" as API
+component "Autentikasi & Otorisasi" as Auth
+component "Manajemen Pemilik & Kelinci" as PetModule
+component "Jadwal & Booking" as BookingModule
+component "Check-in & Antrean" as QueueModule
+component "Rekam Medis" as MedicalModule
+component "Vaksinasi" as VaccineModule
+component "Grooming & Rabbit Care" as GroomingModule
+component "Tagihan & Pembayaran" as BillingModule
+component "Reminder & Notifikasi" as ReminderModule
+component "Pelaporan" as ReportingModule
+database "Rabbit Care Database" as DB
+cloud "Email / WhatsApp / Push Gateway" as NotifGateway
+
+Owner --> OwnerPortal
+Staff --> ClinicPortal
+Manager --> ManagerPortal
+OwnerPortal --> API
+ClinicPortal --> API
+ManagerPortal --> API
+
+API --> Auth
+API --> PetModule
+API --> BookingModule
+API --> QueueModule
+API --> MedicalModule
+API --> VaccineModule
+API --> GroomingModule
+API --> BillingModule
+API --> ReminderModule
+API --> ReportingModule
+
+PetModule --> DB
+BookingModule --> DB
+QueueModule --> DB
+MedicalModule --> DB
+VaccineModule --> DB
+GroomingModule --> DB
+BillingModule --> DB
+ReminderModule --> DB
+ReportingModule --> DB
+Auth --> DB
+
+BookingModule --> ReminderModule : konfirmasi booking
+MedicalModule --> BillingModule : biaya pemeriksaan/tindakan/obat
+VaccineModule --> MedicalModule : catatan kesehatan
+VaccineModule --> BillingModule : biaya vaksin
+VaccineModule --> ReminderModule : vaksin berikutnya
+GroomingModule --> BillingModule : biaya grooming
+GroomingModule --> ReminderModule : grooming berikutnya
+ReminderModule --> NotifGateway
+@enduml
