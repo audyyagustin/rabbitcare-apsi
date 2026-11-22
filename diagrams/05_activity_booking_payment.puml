@@ -1,43 +1,49 @@
 @startuml
 skinparam shadowing false
-skinparam roundcorner 12
-skinparam defaultFontName Arial
-skinparam ArrowColor #48664C
-skinparam BorderColor #48664C
-skinparam BackgroundColor #FAFCFA
-skinparam NoteBackgroundColor #FFF7E8
-skinparam NoteBorderColor #D99A43
-title Activity - Booking dan Pengajuan Pembayaran Customer
+title Activity Diagram - Booking Layanan
+
+|Pemilik Kelinci|
 start
-:Customer memilih profil kelinci;
-:Customer memilih layanan;
-:Customer memilih tanggal dan slot;
-:Sistem menentukan bagian doctor atau groomer;
-:Sistem memeriksa booking pada tanggal, slot, dan bagian yang sama;
-if (Slot tersedia?) then (Ya)
-  :Buat booking code dan invoice ID;
-  :Status booking = MENUNGGU_PEMBAYARAN;
-  :Payment status = UNPAID;
-  :Simpan booking ke localStorage;
-  :Booking otomatis terlihat di Portal Admin;
+:Login;
+:Memilih profil kelinci;
+:Memilih jenis layanan;
+
+if (Memilih pemeriksaan kesehatan?) then (Ya)
+  :Menetapkan layanan pemeriksaan;
 else (Tidak)
-  :Tampilkan Slot tidak tersedia;
+  if (Memilih vaksinasi?) then (Ya)
+    :Menetapkan layanan vaksinasi;
+  else (Tidak)
+    :Menetapkan layanan grooming / rabbit care;
+  endif
+endif
+
+:Memilih petugas, tanggal, dan jam;
+
+|Sistem|
+:Memeriksa jadwal petugas dan kapasitas slot;
+if (Slot tersedia?) then (Ya)
+  :Menampilkan ringkasan booking dan estimasi biaya;
+  |Pemilik Kelinci|
+  :Mengonfirmasi booking;
+  |Sistem|
+  :Membuat nomor booking;
+  :Menyimpan status "Terkonfirmasi";
+  :Mengirim notifikasi ke pemilik dan klinik;
   stop
+else (Tidak)
+  :Menampilkan alternatif jadwal / petugas;
+  |Pemilik Kelinci|
+  if (Memilih alternatif?) then (Ya)
+    :Memilih jadwal alternatif;
+    |Sistem|
+    :Memeriksa ulang ketersediaan;
+    :Membuat dan mengonfirmasi booking;
+    :Mengirim notifikasi;
+    stop
+  else (Tidak)
+    :Membatalkan proses booking;
+    stop
+  endif
 endif
-:Customer membuka Tagihan;
-:Customer memilih metode;
-if (Metode?) then (Transfer Bank)
-  :Tampilkan bank dan nomor rekening tujuan;
-elseif (QRIS)
-  :Tampilkan QR code QRIS;
-else (E-wallet)
-  :Pilih DANA / GoPay / OVO;
-  :Tampilkan nomor e-wallet tujuan;
-endif
-:Customer mengisi nama pengirim;
-:Kirim pengajuan pembayaran;
-:Payment status = SUBMITTED;
-:Booking status = MENUNGGU_VALIDASI;
-:Admin menerima pengajuan untuk divalidasi;
-stop
 @enduml
