@@ -22,17 +22,20 @@ diagrams/
 | 04 | `04_activity_registration_pet_profile.puml` | Activity – registrasi dan profil kelinci |
 | 05 | `05_activity_booking_payment.puml` | Activity – booking dan pengajuan pembayaran |
 | 06 | `06_activity_admin_service_flow.puml` | Activity – validasi, check-in, dan pengarahan |
-| 07 | `07_activity_doctor_exam.puml` | Activity – pemeriksaan dokter |
+| 07 | `07_activity_viccination.puml` | Activity – pemeriksaan dokter |
 | 08 | `08_activity_grooming_referral.puml` | Activity – grooming dan rujukan |
 | 09 | `09_activity_payment_validation.puml` | Activity – pembayaran dan validasi admin |
 | 10 | `10_activity_calendar_history_reminder.puml` | Activity – kalender, riwayat, dan reminder |
 | 11 | `11_sequence_registration_pet.puml` | Sequence – registrasi dan profil kelinci |
 | 12 | `12_sequence_booking_payment_admin.puml` | Sequence – booking, pembayaran, validasi |
-| 13 | `13_sequence_admin_checkin_routing.puml` | Sequence – check-in dan pengarahan |
+| 13 | `13_sequence_vaccination.puml` | Sequence – check-in dan pengarahan |
 | 14 | `14_sequence_doctor_exam.puml` | Sequence – pemeriksaan dokter |
 | 15 | `15_sequence_grooming_referral.puml` | Sequence – grooming dan rujukan |
 | 16 | `16_sequence_manager_reporting.puml` | Sequence – pelaporan manajer |
 | 17 | `17_class_diagram.puml` | Class / data model |
+| 18 | `18_state_booking_payment.puml` | State Diagram – perubahan status booking dan pembayaran |
+| 19 | `19_component_diagram.puml` | Component Diagram – komponen aplikasi dan hubungan antar modul sistem |
+| 20 | `20_deployment_diagram_prototype.puml` | Deployment Diagram – arsitektur penerapan prototype, browser, dan penyimpanan data |
 
 ## Cara membuka dan merender
 
