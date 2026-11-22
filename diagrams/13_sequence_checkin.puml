@@ -1,0 +1,45 @@
+@startuml
+skinparam shadowing false
+title Sequence Diagram - Check-in dan Pemeriksaan Kesehatan
+
+actor "Pemilik Kelinci" as Owner
+actor "Admin / Resepsionis" as Admin
+actor "Dokter Hewan" as Doctor
+boundary "Portal Klinik" as UI
+control "Visit Controller" as VC
+control "Medical Record Service" as MRS
+control "Billing Service" as BS
+database "Database" as DB
+
+Owner -> Admin : Menunjukkan nomor booking
+Admin -> UI : Cari booking
+UI -> VC : getBooking(nomor booking)
+VC -> DB : query booking dan pasien
+DB --> VC : data booking dan pasien
+VC --> UI : detail booking
+Admin -> UI : Verifikasi, input berat dan keluhan awal
+UI -> VC : checkIn(data awal)
+VC -> DB : update status=Check-in\nsimpan data awal dan nomor antrean
+DB --> VC : berhasil
+VC --> UI : nomor antrean
+
+Doctor -> UI : Buka daftar antrean
+UI -> VC : getDoctorQueue()
+VC -> DB : query antrean aktif
+DB --> VC : daftar pasien
+VC --> UI : daftar antrean
+Doctor -> UI : Pilih pasien
+UI -> MRS : getPatientHistory(idKelinci)
+MRS -> DB : query riwayat kesehatan
+DB --> MRS : riwayat kesehatan
+MRS --> UI : riwayat pasien
+Doctor -> UI : Input anamnesis, pemeriksaan, diagnosis, tindakan
+UI -> MRS : saveMedicalRecord(data pemeriksaan)
+MRS -> DB : simpan rekam medis
+MRS -> DB : update status booking=Selesai Dilayani
+MRS -> BS : createDraftInvoice(idBooking, layanan, tindakan, obat)
+BS -> DB : simpan tagihan status=Belum Dibayar
+DB --> BS : nomor tagihan
+BS --> MRS : tagihan terbentuk
+MRS --> UI : pemeriksaan berhasil disimpan
+@enduml
